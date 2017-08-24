@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Login</ion-title>
+    <ion-title>Register</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -20,8 +20,7 @@
       <ion-input type="password" [(ngModel)]="user.password"></ion-input>
     </ion-item>
 
-    <button ion-button block class="marginTop" (click)="login(user)">Login</button>
-    <button ion-button block color="light" (click)="register()">Register</button>
+    <button ion-button block class="marginTop" (click)="register(user)">Register</button>
 
   </ion-list>
 </ion-content>
