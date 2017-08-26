@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import { User } from './../../models/user';
 import { HomePage } from './../home/home';
 import { RegisterPage } from './../register/register';
 
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AuthProvider } from './../../providers/auth';
 
 @Component({
   selector: 'page-login',
@@ -16,8 +16,9 @@ export class LoginPage {
   user = {} as User;
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private toast: ToastController,
+    private authProvier: AuthProvider,
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController,
     public navCtrl: NavController,
     public navParams: NavParams
   ) { }
@@ -27,19 +28,30 @@ export class LoginPage {
   }
 
   /**
-   * Asynchronously perform authentication with Firebase
+   * Login with user email and password
    * @param user 
    */
-  async login(user: User) {
-    try {
-      const result = await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
-      console.log(result);
+  login(user: User) {
+    const loading = this.loadingCtrl.create({
+      content: "Please waiting ..."
+    });
+    loading.present();
+    this.authProvier.login(user).then((data) => {
+      loading.dismiss();
       this.navCtrl.setRoot(HomePage);
-    } catch (e) {
-      console.error(e);
-    }
+    }, (error) => {
+      loading.dismiss();
+      console.log(error);
+      this.toastCtrl.create({
+        message: `${error.message}`,
+        showCloseButton: true
+      }).present();
+    });
   }
 
+  /**
+   * Navigate to register page
+   */
   register() {
     this.navCtrl.push(RegisterPage);
   }

@@ -11,7 +11,11 @@ import { HomePageModule } from './../pages/home/home.module';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { FIREBASE_CONFIG } from './app.firebase.config';
+
+import { AuthProvider } from './../providers/auth';
+import { DataProvider } from './../providers/data';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,10 @@ import { FIREBASE_CONFIG } from './app.firebase.config';
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    AngularFireAuth
+    AngularFireAuth,
+    AngularFireDatabase,
+    AuthProvider,
+    DataProvider
   ]
 })
 export class AppModule { }

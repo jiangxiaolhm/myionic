@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
-
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { AuthProvider } from './../../providers/auth';
 import { User } from './../../models/user';
-import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'page-register',
@@ -13,8 +12,9 @@ export class RegisterPage {
   user = {} as User;
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private toast: ToastController,
+    private authProvider: AuthProvider,
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController,
     public navCtrl: NavController,
     public navParams: NavParams
   ) { }
@@ -24,25 +24,31 @@ export class RegisterPage {
   }
 
   /**
-   * Asynchronously signup new user into Firebase
-   * @param user
+   * Register new user with name, email and password
+   * @param user 
    */
-  async register(user: User) {
-    try {
-      const result = await this.afAuth.auth.createUserWithEmailAndPassword(user.email, user.password);
-      console.log(result);
+  register(user: User) {
+    const loading = this.loadingCtrl.create({
+      content: "Please waiting ..."
+    });
+    loading.present();
+
+    this.authProvider.register(user).then((data) => {
+      loading.dismiss();
+      console.log(data);
       this.navCtrl.popToRoot();
-      this.toast.create({
+      this.toastCtrl.create({
         message: `You have successfully registed in the system.`,
         duration: 2000
       }).present();
-    } catch (e) {
-      console.error(e);
-      this.toast.create({
+    }, (error) => {
+      loading.dismiss();
+      console.log(error);
+      this.toastCtrl.create({
         message: `Sorry, your signup is failed`,
         duration: 2000
       }).present();
-    }
-  }
+    });
 
+  }
 }

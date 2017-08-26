@@ -1,8 +1,8 @@
-
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, ToastController } from 'ionic-angular';
 import { LoginPage } from './../login/login';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AuthProvider } from './../../providers/auth';
+
 
 @IonicPage()
 @Component({
@@ -12,24 +12,25 @@ import { AngularFireAuth } from 'angularfire2/auth';
 export class HomePage {
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private toast: ToastController,
+    private authProvider: AuthProvider,
+    private toastCtrl: ToastController,
     public navCtrl: NavController,
     public navParams: NavParams,
     public app: App
   ) { }
 
   ionViewDidLoad() {
+    console.log('ionViewDidLoad HomePage');
     // Keep checking auth state
     // Redirect to login page when signout
-    this.afAuth.authState.subscribe(data => {
+    this.authProvider.afAuth.authState.subscribe(data => {
       if (data && data.email && data.uid) {
-        this.toast.create({
+        this.toastCtrl.create({
           message: `Welcome to Homepage, ${data.email}`,
           duration: 2000
         }).present();
       } else {
-        this.toast.create({
+        this.toastCtrl.create({
           message: `You are sign out already`,
           duration: 2000
         }).present();
@@ -39,6 +40,9 @@ export class HomePage {
   }
 
   logout() {
-    this.afAuth.auth.signOut();
+    this.authProvider.logout().then(() => {
+    }, (error) => {
+      console.log(error);
+    });
   }
 }
