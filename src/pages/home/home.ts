@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, ToastController } from 'ionic-angular';
+
 import { LoginPage } from './../login/login';
+import { RoomPage } from './../room/room';
+
 import { AuthProvider } from './../../providers/auth';
 
 
@@ -44,5 +47,9 @@ export class HomePage {
     }, (error) => {
       console.log(error);
     });
+  }
+
+  viewRoomPage() {
+    this.navCtrl.push(RoomPage);
   }
 }

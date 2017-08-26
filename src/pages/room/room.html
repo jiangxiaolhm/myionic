@@ -1,12 +1,17 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>room</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Room Page</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-
+  <!-- <button ion-button (click)="loadData()">AddRooms</button> -->
+  <ion-list>
+    <ion-item *ngFor="let room of rooms">
+      <ion-label (click)="foo(room)">{{ room.name }}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
