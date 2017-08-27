@@ -1,8 +1,10 @@
+import { RoomDetailsPage } from './../room-details/room-details';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { Room } from './../../models/room';
 import { DataProvider } from './../../providers/data';
+
 
 @Component({
   selector: 'page-room',
@@ -73,4 +75,23 @@ export class RoomPage {
   foo(room) {
     console.log(room);
   }
+
+  viewRoomDetail(){
+    this.navCtrl.push(RoomDetailsPage);
+  }
+
+  loopFacilities(facilities: {
+    name: string;
+    quantity: number;
+    }[]): string {
+    let result: string = "";
+    facilities.forEach(facility => {
+      result += facility.quantity + " " + facility.name + " ";
+    });
+
+    return result;
+  }
+
+ 
+
 }
