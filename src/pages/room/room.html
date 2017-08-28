@@ -9,9 +9,16 @@
 
 <ion-content padding>
   <!-- <button ion-button (click)="addRoomData()">addRoomData</button> -->
+  
   <ion-list>
-    <ion-item *ngFor="let room of rooms">
-      <ion-label (click)="foo(room)">{{ room.name }}</ion-label>
+    <ion-item *ngFor="let room of rooms" (click)="viewRoomDetail()">
+      <h2> Room: {{ room.name }} </h2>
+      <h3> Building: {{ room.building }} </h3>
+      <h3> Location: {{ room.location }} </h3>
+      <h3> Type: {{ room.type }} </h3>
+      <h3> Capacity: {{ room.capcity }} </h3>
+      <h3> Facilities: {{ loopFacilities(room.facilities) }} </h3>
+      <h3> Notes: {{ room.notes }} </h3>
     </ion-item>
   </ion-list>
 </ion-content>

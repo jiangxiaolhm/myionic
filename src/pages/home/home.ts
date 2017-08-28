@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, App, ToastController } from 'ionic
 
 import { LoginPage } from './../login/login';
 import { RoomPage } from './../room/room';
+import { BookingPage } from './../booking/booking';
 
 import { AuthProvider } from './../../providers/auth';
 
@@ -51,5 +52,9 @@ export class HomePage {
 
   viewRoomPage() {
     this.navCtrl.push(RoomPage);
+  }
+
+  viewBookingPage() {
+    this.navCtrl.push(BookingPage);
   }
 }
