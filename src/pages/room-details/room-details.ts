@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { DataProvider } from './../../providers/data';
 
+import { DataProvider } from './../../providers/data';
 
 @Component({
   selector: 'page-room-details',
@@ -9,51 +9,30 @@ import { DataProvider } from './../../providers/data';
 })
 
 export class RoomDetailsPage {
-  times : any[] = [];
-  
+  times: string[] = [];
+
   constructor(
-      public dataProvider: DataProvider,
-      public navCtrl: NavController, 
-      public navParams: NavParams) {
-      
-     
-  }
+    private dataProvider: DataProvider,
+    public navCtrl: NavController,
+    public navParams: NavParams
+  ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomDetailsPage');
+    this.timeList();
   }
 
-
-  timeList(){
-    let time:string = "";
-     for(var i = 5; i < 24; i++){
-       for(var j = 0; j <= 45; j += 15 ){
-           time+= i + " : " + j;
-           if(j == 0){ time+="0";}
-           this.times.push(time);
-           time = "";
-         }
-     }
-     return this.times;
+  timeList() {
+    let time: string = "";
+    for (var i = 5; i < 24; i++) {
+      for (var j = 0; j <= 45; j += 15) {
+        time += i + " : " + j;
+        if (j == 0) {
+          time += "0";
+        }
+        this.times.push(time);
+        time = "";
+      }
+    }
   }
-   a = this.timeList();
-
-  // generate list of time 15 minutes each and return as array
- 
-    
-  }
- 
-  // timeList(){
-  //    let list = new Array(100);
-  //    let time: string = "";
-  //    for(var i = 5; i < 24; i++){
-  //      for(var j = 0; j <=45; j += 15 ){
-  //          time+= i + " : " + j;
-  //          if(j === 0){ time+="0";}
-  //          this.times.push(time);
-  //        }
-  //    }
-  //    return this.times;
-  // }
-
-
+}

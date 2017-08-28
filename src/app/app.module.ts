@@ -1,4 +1,3 @@
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -9,7 +8,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from './../pages/login/login';
 import { RegisterPage } from './../pages/register/register';
 import { HomePageModule } from './../pages/home/home.module';
-
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -23,8 +21,7 @@ import { DataProvider } from './../providers/data';
   declarations: [
     MyApp,
     LoginPage,
-    RegisterPage,
-    
+    RegisterPage
   ],
   imports: [
     BrowserModule,
@@ -36,8 +33,7 @@ import { DataProvider } from './../providers/data';
   entryComponents: [
     MyApp,
     LoginPage,
-    RegisterPage,
-    
+    RegisterPage
   ],
   providers: [
     StatusBar,

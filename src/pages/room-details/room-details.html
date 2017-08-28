@@ -1,24 +1,23 @@
-
 <ion-header>
-
   <ion-navbar>
-    <ion-title> Room  </ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Room Details</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-   
+
     <h3>Select beginning and ending time</h3>
-    <ion-item *ngFor = "let time of times">
-      <h3>{{time}}</h3>
+    <ion-item *ngFor="let time of times">
+      <h3>{{ time }}</h3>
     </ion-item>
-    
+
   </ion-list>
 </ion-content>
 
 <ion-footer>
-    <button ion-button full>Book</button>
-  </ion-footer>
-
+  <button ion-button full>Book</button>
+</ion-footer>

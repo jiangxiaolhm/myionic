@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Booking } from './../../models/booking';
 import { DataProvider } from './../../providers/data';
@@ -10,7 +11,8 @@ import { DataProvider } from './../../providers/data';
 })
 export class BookingPage {
 
-  bookings: Booking[] = [];
+  bookings: FirebaseListObservable<Booking[]> = null;
+  
 
   constructor(
     private dataProvider: DataProvider,
@@ -20,13 +22,14 @@ export class BookingPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad BookingPage');
+    this.bookings = this.dataProvider.list('/bookings');
   }
 
   addBookingData() {
     this.dataProvider.push("bookings", {
       groupName: "groupName",
-      roomId: "KsbcA8Xxg0YKZjiW6Iv",
-      membersId: ["mJmvEU0qrFa6KW4LY2zdJEg2O5v2"],
+      roomKey: "KsbcA8Xxg0YKZjiW6Iv",
+      membersKey: ["mJmvEU0qrFa6KW4LY2zdJEg2O5v2"],
       startTime: "2017-08-30T16:00:00.000Z1",
       endTime: "2017-08-30T18:00:00.000Z1"
     }).then((data) => {
@@ -36,20 +39,19 @@ export class BookingPage {
     });
   }
 
-  loadBookings() {
-    this.dataProvider.list('bookings', { preserveSnapshot: true }).subscribe(snapshots => {
-      snapshots.forEach(snapshot => {
-        let booking: Booking = {
-          id: snapshot.$key,
-          groupName: snapshot.groupName,
-          roomId: snapshot.roomId,
-          membersId: snapshot.membersId,
-          startTime: snapshot.startTime,
-          endTime: snapshot.endTime,
-        };
-        console.log(booking);
-        this.bookings.push(booking);
-      });
-    });
-  }
+  // loadBookings() {
+  //   this.dataProvider.list('bookings', { preserveSnapshot: true }).subscribe(snapshots => {
+  //     snapshots.forEach(snapshot => {
+  //       let booking: Booking = {
+  //         groupName: snapshot.groupName,
+  //         roomId: snapshot.roomId,
+  //         membersId: snapshot.membersId,
+  //         startTime: snapshot.startTime,
+  //         endTime: snapshot.endTime,
+  //       };
+  //       console.log(booking);
+  //       this.bookings.push(booking);
+  //     });
+  //   });
+  // }
 }

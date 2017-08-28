@@ -1,5 +1,5 @@
 export interface Booking {
-    id: string;
+    $key: string;
     groupName: string;
     roomId: string;
     membersId: string[];

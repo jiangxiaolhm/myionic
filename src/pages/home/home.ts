@@ -21,7 +21,9 @@ export class HomePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public app: App
-  ) { }
+  ) { 
+    console.log("xxx");
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
@@ -33,12 +35,16 @@ export class HomePage {
           message: `Welcome to Homepage, ${data.email}`,
           duration: 2000
         }).present();
+        console.log("success");
+        
       } else {
         this.toastCtrl.create({
           message: `You are sign out already`,
           duration: 2000
         }).present();
         this.navCtrl.setRoot(LoginPage);
+        console.log("fail");
+        
       }
     });
   }

@@ -1,5 +1,5 @@
 export interface Room {
-    id: string;
+    $key: string;
     name: string;
     building: string;
     location: string;

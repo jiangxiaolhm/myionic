@@ -1,10 +1,10 @@
-import { RoomDetailsPage } from './../room-details/room-details';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Room } from './../../models/room';
 import { DataProvider } from './../../providers/data';
-
+import { RoomDetailsPage } from './../room-details/room-details';
 
 @Component({
   selector: 'page-room',
@@ -12,83 +12,58 @@ import { DataProvider } from './../../providers/data';
 })
 export class RoomPage {
 
-  rooms: Room[] = [];
+  rooms: FirebaseListObservable<Room[]> = null;
 
   constructor(
     private dataProvider: DataProvider,
     public navCtrl: NavController,
     public navParams: NavParams
-  ) {
-    this.loadData();
-  }
+  ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomPage');
+    this.rooms = this.dataProvider.list('/rooms');
   }
 
-  // debugging add test data
-  addRoomData() {
-    for (var i = 1; i <= 10; i++) {
-      this.dataProvider.push("rooms", {
-        name: i + "a",
-        building: "Library",
-        location: "Level 01",
-        type: "Group Study",
-        facilities: [{
-          name: "computer",
-          quantity: 1
-        }, {
-          name: "whiteboard",
-          quantity: 1
-        }],
-        capacity: 6,
-        notes: ""
-      }).then((data) => {
-        console.log("#" + i + " success " + data);
-      }, (error) => {
-        console.log("#" + i + " fail " + error);
-      });
-    }
-  }
-
-  /**
-   * Load room data from database to local
-   */
-  loadData() {
-    this.dataProvider.list('rooms', { preserveSnapshot: true }).subscribe(snapshots => {
-      snapshots.forEach(snapshot => {
-        let room: Room = {
-          id: snapshot.$key,
-          name: snapshot.name,
-          building: snapshot.building,
-          location: snapshot.location,
-          type: snapshot.type,
-          facilities: snapshot.facilities,
-          capacity: snapshot.capacity,
-          notes: snapshot.notes
-        };
-        console.log(room);
-        this.rooms.push(room);
-      });
-    });
-  }
-
-  viewRoomDetail(){
+  viewRoomDetail() {
     this.navCtrl.push(RoomDetailsPage);
   }
 
-  loopFacilities(facilities: {
-    name: string;
-    quantity: number;
-    }[]): string {
+  facilitiesToString(
+    facilities: {
+      name: string;
+      quantity: number;
+    }[]
+  ): string {
     let result: string = "";
     facilities.forEach(facility => {
       result += facility.quantity + " " + facility.name + " ";
     });
-
     return result;
   }
 
- 
-
+    // debugging add test data
+    addRoomData() {
+      for (var i = 1; i <= 10; i++) {
+        this.dataProvider.push("rooms", {
+          name: i + "a",
+          building: "Library",
+          location: "Level 01",
+          type: "Group Study",
+          facilities: [{
+            name: "computer",
+            quantity: 1
+          }, {
+            name: "whiteboard",
+            quantity: 1
+          }],
+          capacity: 6,
+          notes: ""
+        }).then((data) => {
+          console.log("#" + i + " success " + data);
+        }, (error) => {
+          console.log("#" + i + " fail " + error);
+        });
+      }
+    }
 }
