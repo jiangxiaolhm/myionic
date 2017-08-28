@@ -39,7 +39,7 @@ export class RoomPage {
           name: "whiteboard",
           quantity: 1
         }],
-        capcity: 6,
+        capacity: 6,
         notes: ""
       }).then((data) => {
         console.log("#" + i + " success " + data);
@@ -56,12 +56,13 @@ export class RoomPage {
     this.dataProvider.list('rooms', { preserveSnapshot: true }).subscribe(snapshots => {
       snapshots.forEach(snapshot => {
         let room: Room = {
+          id: snapshot.$key,
           name: snapshot.name,
           building: snapshot.building,
           location: snapshot.location,
           type: snapshot.type,
           facilities: snapshot.facilities,
-          capcity: snapshot.capcity,
+          capacity: snapshot.capacity,
           notes: snapshot.notes
         };
         console.log(room);

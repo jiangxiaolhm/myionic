@@ -1,4 +1,5 @@
 export interface Room {
+    id: string;
     name: string;
     building: string;
     location: string;
@@ -7,6 +8,6 @@ export interface Room {
         name: string;
         quantity: number;
     }[];
-    capcity: number;
+    capacity: number;
     notes: string;
 }
