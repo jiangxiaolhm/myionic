@@ -17,6 +17,7 @@ import { BookingPage } from './../booking/booking';
     IonicPageModule.forChild(HomePage),
   ],
   entryComponents: [
+    HomePage,
     RoomPage,
     RoomDetailsPage,
     BookingPage
