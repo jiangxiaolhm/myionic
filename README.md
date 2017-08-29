@@ -1,26 +1,26 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+# This project integrates Firebase 3 with AngularFire2 into Ionic3
 
-## How to use this template
-
-*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/ionic-team/ionic2-app-base).
-
-To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/ionic-team/ionic2-app-base).
-
-### With the Ionic CLI:
-
-Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
-
-```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myTutorial tutorial
+## Install
+```
+npm install
+npm install firebase angularfire2 --save
 ```
 
-Then, to run it, cd into `myTutorial` and run:
-
-```bash
-$ ionic cordova platform add ios
-$ ionic cordova run ios
+## This Application was tested with the following configuration
 ```
+cli packages:
 
-Substitute ios for android if not on a Mac.
+    @ionic/cli-utils  : 1.9.2
+    ionic (Ionic CLI) : 3.9.2
 
+local packages:
+
+    @ionic/app-scripts : 2.1.3
+    Ionic Framework    : ionic-angular 3.6.0
+
+System:
+
+    Node : v6.11.2
+    npm  : 3.10.10
+    OS   : Windows 10
+```
