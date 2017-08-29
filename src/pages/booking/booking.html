@@ -9,15 +9,20 @@
 
 <ion-content padding>
 <!-- <button ion-button (click)="addBookingData()">addBookingData</button> -->
-<ion-list>
-    <ion-item *ngFor="let booking of bookings | async">
-      <h2> groupName: {{ booking.groupName }} </h2>
-      <h3> $Key: {{ booking.$key }} </h3>
-      <h3> roomKey: {{ booking.roomKey }} </h3>
-      <h3> membersKey: {{ booking.membersKey }} </h3>
-      <h3> startTime: {{ booking.startTime }} </h3>
-      <h3> endTime: {{ booking.endTime }} </h3>
-    </ion-item>
+  <ion-list>
+      <ion-card *ngFor="let booking of bookings | async">
+          <ion-card-header>
+             Group  : {{ booking.groupName }}
+          </ion-card-header>
+
+          <ion-card-content>
+            <h3> Booking ID: {{ booking.$key }} </h3>
+            <h3> Room ID: {{ booking.roomKey }} </h3>
+            <h3> Member ID: {{ booking.membersKey }} </h3>
+            <h3> Start time: {{ booking.startTime | date:'MMM d, y h:mm a' }} </h3>
+            <h3> End time: {{ booking.endTime | date:'MMM d, y h:mm a'}} </h3>
+        </ion-card-content>
+      </ion-card>
   </ion-list>
 
 </ion-content>
