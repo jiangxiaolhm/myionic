@@ -36,7 +36,7 @@ export class RoomDetailsPage {
   initialiseSchedule() {
     let stTime = new Date("2017-08-30T00:00:00");
     let enTime = new Date("2017-08-30T00:15:00");
-    
+
     for (let i = 0; i < 96; i++) {
       let duration: Duration = {
         startTime: new Date(stTime),
@@ -44,8 +44,8 @@ export class RoomDetailsPage {
         available: true
       };
       this.durations.push(duration);
-      stTime.setTime(stTime.getTime() + 15*60*1000);
-      enTime.setTime(enTime.getTime() + 15*60*1000);
+      stTime.setTime(stTime.getTime() + 15 * 60 * 1000);
+      enTime.setTime(enTime.getTime() + 15 * 60 * 1000);
     }
   }
 
@@ -69,7 +69,7 @@ export class RoomDetailsPage {
     if (!this.startDuration) {
       this.startDuration = duration;
       console.log("start at " + this.startDuration.startTime);
-    } else if(!this.endDuration) {
+    } else if (!this.endDuration) {
       this.endDuration = duration;
       console.log("end at " + this.endDuration.endTime);
     } else {
@@ -82,7 +82,7 @@ export class RoomDetailsPage {
   book() {
     if (this.startDuration && this.endDuration) {
 
-      let diff = this.endDuration.endTime.getTime()- this.startDuration.startTime.getTime();
+      let diff = this.endDuration.endTime.getTime() - this.startDuration.startTime.getTime();
 
       if (diff < 0) {
         let temp: Duration = this.startDuration;
@@ -117,10 +117,15 @@ export class RoomDetailsPage {
                 this.alertCtrl.create({
                   title: 'Congratulation',
                   subTitle: 'You have successfully booked a room.',
-                  buttons: ['OK']
-                });
-                this.navCtrl.popToRoot();
-                this.navCtrl.push(BookingPage);
+                  buttons: [{
+                    text: 'OK',
+                    handler: data => {
+                      this.navCtrl.popToRoot();
+                      this.navCtrl.push(BookingPage);
+                    }
+                  }]
+                }).present();
+                
               }, (error) => {
                 console.log("fail " + error);
               });
