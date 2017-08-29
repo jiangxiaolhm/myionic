@@ -9,10 +9,21 @@
 
 <ion-content padding>
 
-  <h2>This is home page</h2>
-  <button ion-button (click)="viewRoomPage()">View Room Page</button>
-  <button ion-button (click)="viewBookingPage()">View Booking Page</button>
-  <button ion-button (click)="logout()">Logout</button>
+  
+  <ion-list>
+  <button ion-item (click)="viewRoomPage()">
+    <ion-icon name="search" item-start></ion-icon>
+    Find a room.
+  </button>
+  </ion-list>
+
+  <ion-list>
+  <button ion-item full (click)="viewBookingPage()">
+    <ion-icon name="calendar" item-start></ion-icon>
+    View your bookings
+  </button>
+  </ion-list>
+  <button ion-button full (click)="logout()">Logout</button>
   
 
 </ion-content>

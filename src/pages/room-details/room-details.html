@@ -8,16 +8,19 @@
 </ion-header>
 
 <ion-content padding>
+  <h3 text-center>Select your time.</h3>
   <ion-list>
-
-    <h3>Select beginning and ending time</h3>
-    <ion-item *ngFor="let time of times">
-      <h3 (click)="selectTime(time)">{{ time }}</h3>
-    </ion-item>
-
+      <!-- <button ion-item *ngFor="let time of times" (click)="selectTime(time)" text-center>
+          {{ time }}
+      </button> -->
+      <ion-item *ngFor="let time of times" (click)="selectTime(time)" text-center>
+          <ion-label>{{ time }}</ion-label>
+          <ion-radio value="{{ time }}"></ion-radio>
+        </ion-item>
   </ion-list>
+ 
 </ion-content>
 
-<ion-footer>
-  <button ion-button full (click)="book()">Book</button>
+<ion-footer >
+  <button ion-button block (click)="book()">Book</button>
 </ion-footer>
