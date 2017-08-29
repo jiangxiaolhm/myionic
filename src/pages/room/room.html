@@ -11,7 +11,7 @@
   <!-- <button ion-button (click)="addRoomData()">addRoomData</button> -->
 
   <ion-list>
-    <ion-item *ngFor="let room of rooms | async">
+    <ion-item *ngFor="let room of rooms | async" (click)="viewRoomDetail(room.$key)">
       <h2> Room: {{ room.name }} </h2>
       <h3> $Key: {{ room.$key }} </h3>
       <h3> Building: {{ room.building }} </h3>

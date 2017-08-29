@@ -12,12 +12,12 @@
 
     <h3>Select beginning and ending time</h3>
     <ion-item *ngFor="let time of times">
-      <h3>{{ time }}</h3>
+      <h3 (click)="selectTime(time)">{{ time }}</h3>
     </ion-item>
 
   </ion-list>
 </ion-content>
 
 <ion-footer>
-  <button ion-button full>Book</button>
+  <button ion-button full (click)="book()">Book</button>
 </ion-footer>

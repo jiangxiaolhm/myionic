@@ -25,8 +25,8 @@ export class RoomPage {
     this.rooms = this.dataProvider.list('/rooms');
   }
 
-  viewRoomDetail() {
-    this.navCtrl.push(RoomDetailsPage);
+  viewRoomDetail(key: string) {
+    this.navCtrl.push(RoomDetailsPage, key);
   }
 
   facilitiesToString(

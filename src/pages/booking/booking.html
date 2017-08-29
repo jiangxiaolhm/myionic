@@ -13,8 +13,8 @@
     <ion-item *ngFor="let booking of bookings | async">
       <h2> groupName: {{ booking.groupName }} </h2>
       <h3> $Key: {{ booking.$key }} </h3>
-      <h3> roomId: {{ booking.roomId }} </h3>
-      <h3> membersId: {{ booking.membersId }} </h3>
+      <h3> roomKey: {{ booking.roomKey }} </h3>
+      <h3> membersKey: {{ booking.membersKey.join(',') }} </h3>
       <h3> startTime: {{ booking.startTime }} </h3>
       <h3> endTime: {{ booking.endTime }} </h3>
     </ion-item>

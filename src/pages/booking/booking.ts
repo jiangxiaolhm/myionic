@@ -12,7 +12,6 @@ import { DataProvider } from './../../providers/data';
 export class BookingPage {
 
   bookings: FirebaseListObservable<Booking[]> = null;
-  
 
   constructor(
     private dataProvider: DataProvider,
@@ -35,23 +34,7 @@ export class BookingPage {
     }).then((data) => {
       console.log("success " + data);
     }, (error) => {
-      console.log(" fail " + error);
+      console.log("fail " + error);
     });
   }
-
-  // loadBookings() {
-  //   this.dataProvider.list('bookings', { preserveSnapshot: true }).subscribe(snapshots => {
-  //     snapshots.forEach(snapshot => {
-  //       let booking: Booking = {
-  //         groupName: snapshot.groupName,
-  //         roomId: snapshot.roomId,
-  //         membersId: snapshot.membersId,
-  //         startTime: snapshot.startTime,
-  //         endTime: snapshot.endTime,
-  //       };
-  //       console.log(booking);
-  //       this.bookings.push(booking);
-  //     });
-  //   });
-  // }
 }

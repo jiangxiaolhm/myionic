@@ -22,7 +22,6 @@ export class HomePage {
     public navParams: NavParams,
     public app: App
   ) { 
-    console.log("xxx");
   }
 
   ionViewDidLoad() {
@@ -30,21 +29,20 @@ export class HomePage {
     // Keep checking auth state
     // Redirect to login page when signout
     this.authProvider.afAuth.authState.subscribe(data => {
+      // Dugging
+      console.log(data);
+      
       if (data && data.email && data.uid) {
         this.toastCtrl.create({
           message: `Welcome to Homepage, ${data.email}`,
           duration: 2000
         }).present();
-        console.log("success");
-        
       } else {
         this.toastCtrl.create({
           message: `You are sign out already`,
           duration: 2000
         }).present();
         this.navCtrl.setRoot(LoginPage);
-        console.log("fail");
-        
       }
     });
   }
