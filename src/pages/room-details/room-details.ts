@@ -1,3 +1,4 @@
+import { Duration } from './../../models/duration';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
@@ -12,9 +13,10 @@ import { AuthProvider } from './../../providers/auth';
 })
 
 export class RoomDetailsPage {
-  times: string[] = [];
-  startTime: Date;
-  endTime: Date;
+  durations: Duration[] = [];
+
+  startDuration: Duration = null;
+  endDuration: Duration = null;
 
   constructor(
     private dataProvider: DataProvider,
@@ -27,7 +29,24 @@ export class RoomDetailsPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomDetailsPage');
     console.log(this.navParams);
-    this.timeList();
+    // this.timeList();
+    this.initialiseSchedule();
+  }
+
+  initialiseSchedule() {
+    let stTime = new Date("2017-08-30T00:00:00");
+    let enTime = new Date("2017-08-30T00:15:00");
+    
+    for (let i = 0; i < 96; i++) {
+      let duration: Duration = {
+        startTime: new Date(stTime),
+        endTime: new Date(enTime),
+        available: true
+      };
+      this.durations.push(duration);
+      stTime.setTime(stTime.getTime() + 15*60*1000);
+      enTime.setTime(enTime.getTime() + 15*60*1000);
+    }
   }
 
   timeList() {
@@ -40,37 +59,41 @@ export class RoomDetailsPage {
         if (j == 0) {
           time += "0";
         }
-        this.times.push(time);
+        // this.times.push(time);
         time = "";
       }
     }
   }
 
-  selectTime(time: String) {
-    if (!this.startTime) {
-      this.startTime = new Date("2017-08-30T" + time + ":00.000");
-      console.log("start " + this.startTime);
-    } else if (!this.endTime) {
-      this.endTime = new Date("2017-08-30T" + time + ":00.000");
-      console.log("end " + this.endTime);
+  selectDuration(duration: Duration) {
+    if (!this.startDuration) {
+      this.startDuration = duration;
+      console.log("start at " + this.startDuration.startTime);
+    } else if(!this.endDuration) {
+      this.endDuration = duration;
+      console.log("end at " + this.endDuration.endTime);
     } else {
-      this.startTime = null;
-      this.endTime = null;
+      this.startDuration = null;
+      this.endDuration = null;
       console.log("select again");
     }
   }
 
   book() {
-    if (this.startTime && this.endTime) {
+    if (this.startDuration && this.endDuration) {
 
-      let diff = this.endTime.getTime() - this.startTime.getTime();
+      let diff = this.endDuration.endTime.getTime()- this.startDuration.startTime.getTime();
 
-      if (diff > 0 && diff <= 2 * 60 * 60 * 1000) {
+      if (diff < 0) {
+        let temp: Duration = this.startDuration;
+        this.startDuration = this.endDuration;
+        this.endDuration = temp;
+      }
+      if (diff <= 2 * 60 * 60 * 1000) {
         console.log("valid duration");
-
         let prompt = this.alertCtrl.create({
           title: 'Make a booking',
-          message: "Enter a group name for your room.",
+          message: "Start Time: " + this.startDuration.startTime.toLocaleTimeString() + "<br>End Time: " + this.endDuration.endTime.toLocaleTimeString(),
           inputs: [{
             name: 'groupName',
             placeholder: 'Group Name'
@@ -87,10 +110,15 @@ export class RoomDetailsPage {
                 groupName: data.groupName,
                 roomKey: this.navParams.data,
                 membersKey: [this.authProvider.afAuth.auth.currentUser.uid],
-                startTime: this.startTime.toJSON(),
-                endTime: this.endTime.toJSON()
+                startTime: this.startDuration.startTime.toJSON(),
+                endTime: this.endDuration.endTime.toJSON()
               }).then((data) => {
                 console.log("success " + data);
+                this.alertCtrl.create({
+                  title: 'Congratulation',
+                  subTitle: 'You have successfully booked a room.',
+                  buttons: ['OK']
+                });
                 this.navCtrl.popToRoot();
                 this.navCtrl.push(BookingPage);
               }, (error) => {

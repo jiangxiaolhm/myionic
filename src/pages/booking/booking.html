@@ -18,9 +18,9 @@
           <ion-card-content>
             <h3> Booking ID  : {{ booking.$key }} </h3>
             <h3> Room ID  : {{ booking.roomKey }} </h3>
-            <h3> Member ID  : {{ booking.membersKey.join(',') }} </h3>
-            <h3> Start time  : {{ booking.startTime }} </h3>
-            <h3> End time  : {{ booking.endTime }} </h3>
+            <h3> Member ID  : {{ booking.membersKey }} </h3>
+            <h3> Start time  : {{ booking.startTime.toLocaleString() }} </h3>
+            <h3> End time  : {{ booking.endTime.toLocaleString() }} </h3>
         </ion-card-content>
       </ion-card>
   </ion-list>

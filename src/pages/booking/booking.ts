@@ -22,6 +22,11 @@ export class BookingPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad BookingPage');
     this.bookings = this.dataProvider.list('/bookings');
+    // this.bookings.subscribe((snapshots) => {
+    //   snapshots.forEach((snapshot) => {
+    //     console.log(snapshot.startTime.toLocaleString());
+    //   });
+    // })
   }
 
   addBookingData() {
