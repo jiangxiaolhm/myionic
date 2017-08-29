@@ -10,13 +10,10 @@
 <ion-content padding>
   <h3 text-center>Select your time.</h3>
   <ion-list>
-      <!-- <button ion-item *ngFor="let time of times" (click)="selectTime(time)" text-center>
+      <button ion-item *ngFor="let time of times" (click)="selectTime(time)" text-center>
           {{ time }}
-      </button> -->
-      <ion-item *ngFor="let time of times" (click)="selectTime(time)" text-center>
-          <ion-label>{{ time }}</ion-label>
-          <ion-radio value="{{ time }}"></ion-radio>
-        </ion-item>
+      </button>
+      
   </ion-list>
  
 </ion-content>
