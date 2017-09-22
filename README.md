@@ -1,5 +1,6 @@
 # Integrating Firebase 3 with AngularFire2 into Ionic3
 
+
 ## This project is developed by SEP-Wrk-04-G3
 
 ## Install
