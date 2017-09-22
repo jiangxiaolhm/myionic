@@ -11,7 +11,7 @@ import { HomePage } from './../pages/home/home';
 })
 export class MyApp {
   // make LoginPage the root (or first) page
-  rootPage: any = LoginPage;
+  rootPage: any = HomePage;
 
   constructor(
     public platform: Platform,

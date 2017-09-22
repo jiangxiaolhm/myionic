@@ -1,3 +1,4 @@
+import { Facility } from './../../models/facility';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2/database';
@@ -29,12 +30,7 @@ export class RoomPage {
     this.navCtrl.push(RoomDetailsPage, key);
   }
 
-  facilitiesToString(
-    facilities: {
-      name: string;
-      quantity: number;
-    }[]
-  ): string {
+  facilitiesToString(facilities: Facility[]): string {
     let result: string = "";
     facilities.forEach(facility => {
       result += facility.quantity + " " + facility.name + " ";
