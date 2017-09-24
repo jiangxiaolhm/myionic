@@ -1,3 +1,4 @@
+import { DataProvider } from './../../providers/data';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 

@@ -52,7 +52,8 @@ export class AuthProvider {
                     this.dataProvider.set("users", this.afAuth.auth.currentUser.uid, {
                         name: user.name,
                         email: user.email,
-                        password: user.password
+                        password: user.password,
+                        bookingsKey: false
                     }).then(() => {
                         resolve("success");
                     }, (error) => {

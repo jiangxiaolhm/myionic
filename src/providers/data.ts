@@ -1,13 +1,25 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import 'rxjs/add/operator/take'
+
+import { Booking } from './../models/booking';
+import { Room } from './../models/room';
+import { User } from './../models/user';
 
 @Injectable()
 export class DataProvider {
 
+    user: FirebaseObjectObservable<User> = null;
+    rooms: FirebaseListObservable<Room[]> = null;
+    bookings: FirebaseListObservable<Booking[]> = null;
+
     constructor(
-        private afDB: AngularFireDatabase
-    ) { }
+        private afDB: AngularFireDatabase,
+        private authProvider: AngularFireAuth
+    ) {
+        this.rooms = this.list('/rooms');
+    }
 
     /**
      * Push new data to the list of firedatabase with given path 

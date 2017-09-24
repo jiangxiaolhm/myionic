@@ -1,4 +1,4 @@
-import { Duration } from './../../models/duration';
+
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
@@ -6,18 +6,21 @@ import { BookingPage } from './../booking/booking';
 
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
-
+import { Booking } from './../../models/booking';
+import { FirebaseListObservable } from 'angularfire2/database';
+import { Duration } from './../../models/duration';
 @Component({
   selector: 'page-room-details',
   templateUrl: 'room-details.html',
 })
 
 export class RoomDetailsPage {
-  durations: Duration[] = [];
 
+  durations: Duration[] = [];
   startDuration: Duration = null;
   endDuration: Duration = null;
-
+  bookings: FirebaseListObservable<Booking>;
+  
   constructor(
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
@@ -29,6 +32,7 @@ export class RoomDetailsPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomDetailsPage');
     console.log(this.navParams);
+
     // this.timeList();
     this.initialiseSchedule();
   }
@@ -79,6 +83,7 @@ export class RoomDetailsPage {
     }
   }
 
+
   book() {
     if (this.startDuration && this.endDuration) {
 
@@ -106,14 +111,12 @@ export class RoomDetailsPage {
           }, {
             text: 'Book',
             handler: data => {
-              this.dataProvider.push("bookings", {
+              this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
                 groupName: data.groupName,
                 roomKey: this.navParams.data,
-                membersKey: [this.authProvider.afAuth.auth.currentUser.uid],
                 startTime: this.startDuration.startTime.toJSON(),
                 endTime: this.endDuration.endTime.toJSON()
               }).then((data) => {
-                console.log("success " + data);
                 this.alertCtrl.create({
                   title: 'Congratulation',
                   subTitle: 'You have successfully booked a room.',
@@ -125,7 +128,6 @@ export class RoomDetailsPage {
                     }
                   }]
                 }).present();
-                
               }, (error) => {
                 console.log("fail " + error);
               });

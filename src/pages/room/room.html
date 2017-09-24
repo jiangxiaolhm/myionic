@@ -8,18 +8,15 @@
 </ion-header>
 
 <ion-content padding>
+  <!-- For debugging -->
   <!-- <button ion-button (click)="addRoomData()">addRoomData</button> -->
-
   <ion-list>
-
-      <ion-card *ngFor="let room of rooms | async" (click)="viewRoomDetail(room.$key)">
-          <button ion-item>
+    <ion-card *ngFor="let room of rooms | async" (click)="viewRoomDetail(room.$key)">
+      <button ion-item>
           <ion-card-header>
               Room: {{ room.name }}
           </ion-card-header>
           <ion-card-content>
-              
-              <h3> $Key: {{ room.$key }} </h3>
               <h3> Building: {{ room.building }} </h3>
               <h3> Location: {{ room.location }} </h3>
               <h3> Type: {{ room.type }} </h3>
@@ -28,7 +25,6 @@
               <h3> Notes: {{ room.notes }} </h3> 
           </ion-card-content>
          </button>
-      </ion-card>
-    
+    </ion-card>
   </ion-list>
 </ion-content>

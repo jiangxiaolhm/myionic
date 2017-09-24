@@ -23,7 +23,7 @@ export class RoomPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomPage');
-    this.rooms = this.dataProvider.list('/rooms');
+    this.rooms = this.dataProvider.rooms;
   }
 
   viewRoomDetail(key: string) {
