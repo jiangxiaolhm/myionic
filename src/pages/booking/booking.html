@@ -19,6 +19,7 @@
         <h3> Start time: {{ booking.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ booking.endTime | date:'MMM d, y HH:mm'}} </h3>
       </ion-card-content>
+      <button (click)="cancel(booking.$key)">Cancel</button>
     </ion-card>
   </ion-list>
 </ion-content>
