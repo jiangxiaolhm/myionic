@@ -1,143 +1,119 @@
+import { Observable } from 'rxjs/Observable';
+import { Component, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { NavController, NavParams, AlertController, Slides } from 'ionic-angular';
 
-import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
-
-import { BookingPage } from './../booking/booking';
-
+import { PERIOD_CONFIG, MAX_ADVANCE_BOOKING_DAY } from './../../app/app.firebase.config';
+import { Period } from './../../models/period';
+import { Day } from './../../models/day';
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
-import { Booking } from './../../models/booking';
-import { FirebaseListObservable } from 'angularfire2/database';
-import { Duration } from './../../models/duration';
+
 @Component({
   selector: 'page-room-details',
   templateUrl: 'room-details.html',
 })
 
 export class RoomDetailsPage {
+  @ViewChild(Slides) slides: Slides;
 
-  durations: Duration[] = [];
-  startDuration: Duration = null;
-  endDuration: Duration = null;
-  bookings: FirebaseListObservable<Booking>;
-  
+  day: Day = null;
+  days: Day[] = [];
+  // index: number = null;
+  indexA: number = null;
+  indexB: number = null;
+
   constructor(
+    private datePipe: DatePipe,
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
     public alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams
-  ) { }
+  ) {
+    this.day = this.newDay();
+    this.days.push(this.day);
+    this.days.push(this.newDay());
+    this.days[1].startTime = new Date("2017-08-31T08:00:00");
+    this.days[1].endTime = new Date("2017-08-31T22:00:00");
+    console.log(this.days);
+    // this.index = 0;
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomDetailsPage');
     console.log(this.navParams);
-
-    // this.timeList();
-    this.initialiseSchedule();
+    // console.log('index is ' + this.index);
   }
 
-  initialiseSchedule() {
-    let stTime = new Date("2017-08-30T00:00:00");
-    let enTime = new Date("2017-08-30T00:15:00");
+  newDay() {
+    let newDay: Day = {
+      startTime: new Date("2017-08-30T08:00:00"),
+      endTime: new Date("2017-08-30T22:00:00"),
+      periods: []
+    };
 
-    for (let i = 0; i < 96; i++) {
-      let duration: Duration = {
-        startTime: new Date(stTime),
-        endTime: new Date(enTime),
-        available: true
+    let numberOfPeriods = (newDay.endTime.getTime() - newDay.startTime.getTime()) / PERIOD_CONFIG;
+
+    for (let i = 0; i < numberOfPeriods; i++) {
+      let period: Period = {
+        index: i,
+        available: (i < 10),
+        groupName: ""
       };
-      this.durations.push(duration);
-      stTime.setTime(stTime.getTime() + 15 * 60 * 1000);
-      enTime.setTime(enTime.getTime() + 15 * 60 * 1000);
+      newDay.periods.push(period);
     }
+    return newDay;
   }
 
-  timeList() {
-    let time: string = "";
-    for (var i = 0; i < 24; i++) {
-      for (var j = 0; j <= 45; j += 15) {
-        if (i < 10)
-          time += "0";
-        time += i + ":" + j;
-        if (j == 0) {
-          time += "0";
-        }
-        // this.times.push(time);
-        time = "";
-      }
-    }
+  getPeriodInfo(period: Period) {
+    let periodStart: Date = new Date(this.day.startTime.getTime() + period.index * PERIOD_CONFIG);
+    let periodEnd: Date = new Date(periodStart.getTime() + PERIOD_CONFIG);
+    let periodInfo: string = this.datePipe.transform(periodStart, 'HH:mm') + ' - ' + this.datePipe.transform(periodEnd, 'HH:mm');
+    periodInfo += period.available ? " Free" : " Booked";
+    return periodInfo;
   }
 
-  selectDuration(duration: Duration) {
-    if (!this.startDuration) {
-      this.startDuration = duration;
-      console.log("start at " + this.startDuration.startTime);
-    } else if (!this.endDuration) {
-      this.endDuration = duration;
-      console.log("end at " + this.endDuration.endTime);
-    } else {
-      this.startDuration = null;
-      this.endDuration = null;
-      console.log("select again");
-    }
+  getColor(period: Period) {
+    if (period.index == this.indexA || period.index == this.indexB)
+      return "danger";
+    
+    if (period.index > this.indexA && period.index < this.indexB)
+      return "primary";
+
+
+    return period.available ? "light" : "dark";
   }
 
+  lastDay() {
+    this.indexA = null;
+    this.indexB = null;
+    if (this.slides.getActiveIndex() > 0)
+      this.slides.slidePrev();
+  }
 
-  book() {
-    if (this.startDuration && this.endDuration) {
+  nextDay() {
+    this.indexA = null;
+    this.indexB = null;
+    if (this.slides.getActiveIndex() < this.days.length - 1)
+      this.slides.slideNext();
+  }
 
-      let diff = this.endDuration.endTime.getTime() - this.startDuration.startTime.getTime();
-
-      if (diff < 0) {
-        let temp: Duration = this.startDuration;
-        this.startDuration = this.endDuration;
-        this.endDuration = temp;
-      }
-      if (diff <= 2 * 60 * 60 * 1000) {
-        console.log("valid duration");
-        let prompt = this.alertCtrl.create({
-          title: 'Make a booking',
-          message: "Start Time: " + this.startDuration.startTime.toLocaleTimeString() + "<br>End Time: " + this.endDuration.endTime.toLocaleTimeString(),
-          inputs: [{
-            name: 'groupName',
-            placeholder: 'Group Name'
-          },],
-          buttons: [{
-            text: 'Cancel',
-            handler: data => {
-              console.log('Cancel clicked');
-            }
-          }, {
-            text: 'Book',
-            handler: data => {
-              this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
-                groupName: data.groupName,
-                roomKey: this.navParams.data,
-                startTime: this.startDuration.startTime.toJSON(),
-                endTime: this.endDuration.endTime.toJSON()
-              }).then((data) => {
-                this.alertCtrl.create({
-                  title: 'Congratulation',
-                  subTitle: 'You have successfully booked a room.',
-                  buttons: [{
-                    text: 'OK',
-                    handler: data => {
-                      this.navCtrl.popToRoot();
-                      this.navCtrl.push(BookingPage);
-                    }
-                  }]
-                }).present();
-              }, (error) => {
-                console.log("fail " + error);
-              });
-            }
-          }]
-        });
-        prompt.present();
+  selectPeriod(index: number) {
+    if (this.indexA == null) {
+      this.indexA = index;
+    }
+    else if (this.indexB == null) {
+      if (index < this.indexA) {
+        this.indexB = this.indexA;
+        this.indexA = index;
       } else {
-        console.log("invalid duration");
+        this.indexB = index;
       }
+    }
+    else {
+      this.indexA = null;
+      this.indexB = null;
     }
   }
 }

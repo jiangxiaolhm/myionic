@@ -3,13 +3,13 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Room Details</ion-title>
+    <!-- <ion-title>{{ this.days[index].startTime | date: 'MMM d, y' }}</ion-title> -->
+    <ion-title>Schedule</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h3 text-center>Select your time.</h3>
-  <ion-list>
+  <!-- <ion-list>
     <div *ngFor="let duration of durations">
       <button ion-item *ngIf="duration != startDuration && duration != endDuration" (click)="selectDuration(duration)" text-center>
         <div> {{ duration.startTime | date: 'HH:mm' }} - {{ duration.endTime | date: 'HH:mm' }} </div>
@@ -18,7 +18,29 @@
         <div> {{ duration.startTime | date: 'HH:mm' }} - {{ duration.endTime | date: 'HH:mm' }} </div>
       </button>
     </div>
-  </ion-list>
+  </ion-list> -->
+
+  <ion-fab left middle>
+    <button ion-fab color="grey" class="nav-button" mini (click)="lastDay()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-fab right middle>
+    <button ion-fab color="grey" class="nav-button" mini (click)="nextDay()">
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-slides pager>
+    <ion-slide *ngFor="let day of days">
+      <h3>{{ day.startTime | date: 'MMM d, y' }}</h3>
+      <ion-list>
+        <button *ngFor="let period of day.periods" [color]="getColor(period)" ion-item full [disabled]="!period.available"
+          text-center (click)="selectPeriod(period.index)">{{ getPeriodInfo(period) }}</button>
+      </ion-list>
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>
 
 <ion-footer>

@@ -1,3 +1,4 @@
+import { Day } from './day';
 import { Facility } from './facility';
 
 export interface Room {
@@ -9,4 +10,5 @@ export interface Room {
     facilities: Facility[];
     capacity: number;
     notes: string;
+    days: Day[];
 }
