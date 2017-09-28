@@ -44,4 +44,15 @@ export class BookingPage {
      this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
      
   }
+
+  isExpired(endTime){
+    var q = new Date();
+    var m = q.getMonth();
+    var d = q.getDate();
+    var y = q.getFullYear();
+    var date = new Date(y,m,d);
+    
+    var endDate = new Date(endTime);
+    return endDate < date;
+  }
 }
