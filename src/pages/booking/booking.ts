@@ -5,6 +5,7 @@ import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Booking } from './../../models/booking';
 import { DataProvider } from './../../providers/data';
+import { AuthProvider } from './../../providers/auth';
 
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
@@ -21,6 +22,7 @@ export class BookingPage {
   location: string = 'null';
   constructor(
     private dataProvider: DataProvider,
+    private authProvider: AuthProvider,
     public navCtrl: NavController,
     public navParams: NavParams
   ) { }
@@ -36,5 +38,10 @@ export class BookingPage {
     }).map((rooms: Room[]) => {
       this.location = rooms[0].building + ' ' + rooms[0].location + ' ' + rooms[0].name;
     }).first().toPromise();
+  }
+
+  cancel(id){
+     this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
+     
   }
 }
