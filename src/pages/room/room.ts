@@ -19,11 +19,12 @@ export class RoomPage {
     private dataProvider: DataProvider,
     public navCtrl: NavController,
     public navParams: NavParams
-  ) { }
+  ) {
+    this.rooms = this.dataProvider.rooms;
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomPage');
-    this.rooms = this.dataProvider.rooms;
   }
 
   viewRoomDetail(key: string) {

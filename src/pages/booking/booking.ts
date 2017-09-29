@@ -28,9 +28,9 @@ export class BookingPage {
   ) { }
 
   async ionViewDidLoad() {
-    
+
     this.bookings = this.dataProvider.bookings;
-    
+
     // Get room location using room key from rooms table
     await this.dataProvider.list('rooms', {
       orderByKey: true,
@@ -40,8 +40,7 @@ export class BookingPage {
     }).first().toPromise();
   }
 
-  cancel(id){
-     this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
-     
+  cancel(id) {
+    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', id);
   }
 }
