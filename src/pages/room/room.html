@@ -10,9 +10,46 @@
 <ion-content padding>
   <!-- For debugging -->
   <!-- <button ion-button (click)="addRoomData()">addRoomData</button> -->
+
+  <!-- WORKING BLOCK  --------------------------->
+  <ion-item>
+    <ion-label>Building</ion-label>
+    <ion-select [(ngModel)]="filterBuilding">
+      <ion-option>Library</ion-option>
+      <ion-option>Building 11</ion-option>
+      <ion-option>Building 6</ion-option>
+      <ion-option>Block A Level 1</ion-option>
+    </ion-select>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label>Type</ion-label>
+    <ion-select [(ngModel)]="filterType">
+      <ion-option>Group Study</ion-option>
+      <ion-option> Individual Study</ion-option>
+      <ion-option> Large Presentation Room</ion-option>
+      <ion-option> Open space</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Capacity</ion-label>
+    <ion-select [(ngModel)]="filterCapacity">
+      <ion-option>1</ion-option>
+      <ion-option>4</ion-option>
+      <ion-option>6</ion-option>
+      <ion-option>8</ion-option>
+      <ion-option>10</ion-option>
+      <ion-option>12</ion-option>
+      <ion-option>25</ion-option>
+      <ion-option>30</ion-option>
+    </ion-select>
+  </ion-item>
+
+
   <ion-list>
     <ion-card *ngFor="let room of rooms | async" (click)="viewRoomDetail(room.$key)">
-      <button ion-item>
+      <button ion-item *ngIf="filter(room.building, room.capacity, room.type)">
           <ion-card-header>
               Room: {{ room.name }}
           </ion-card-header>
@@ -22,7 +59,7 @@
               <h3> Type: {{ room.type }} </h3>
               <h3> Capacity: {{ room.capacity }} </h3>
               <h3> Facilities: {{ facilitiesToString(room.facilities) }} </h3>
-              <h3> Notes: {{ room.notes }} </h3> 
+              <h3> Notes: {{ room.notes }} </h3>
           </ion-card-content>
          </button>
     </ion-card>
