@@ -19,7 +19,7 @@ export class SchedulePage {
 
   @ViewChild(Slides)
   private slides: Slides;
-  
+
   private days: Day[] = null;
 
   private periodA: Period = null;
@@ -34,15 +34,13 @@ export class SchedulePage {
     public navParams: NavParams
   ) {
     // this.setDay('30_08_2017');
-    this.setDays();
+    this.initialiseDays();
 
     // this.testing();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SchedulePage');
-    console.log(this.navParams);
-    // console.log(this.datePipe.transform(1504044000000, 'MMM d, y HH:mm'));
   }
 
   /**
@@ -51,22 +49,63 @@ export class SchedulePage {
    * @private
    * @memberof SchedulePage
    */
-  private setDays() {
-    // let systemTime = new Date().getTime();
+  private initialiseDays() {
     // testing data
-    let systemTime = new Date('2017-08-30T00:00:00').getTime();
+    // let startTime = new Date('2017-08-29T08:00:00');
+    // let endTime = new Date('2017-08-29T20:00:00');
+    // system datetime
+    let startTime = new Date();
+    let endTime = new Date();
+    startTime.setHours(8, 0, 0, 0);
+    endTime.setHours(20, 0, 0, 0);
+
+    this.days = [];
+
+    for (let i = 0; i <= 7; i++) {
+      let day: Day = {
+        $key: this.datePipe.transform(startTime, 'dd_MM_yyyy'),
+        startTime: startTime.getTime(),
+        endTime: endTime.getTime(),
+        periods: []
+      };
+      for (let j = day.startTime; j < day.endTime; j += PERIOD_CONFIG) {
+        day.periods.push({
+          startTime: j,
+          endTime: j + PERIOD_CONFIG,
+          available: true,
+          groupName: ''
+        });
+      }
+      this.days.push(day);
+      startTime.setDate(startTime.getDate() + 1);
+      endTime.setDate(endTime.getDate() + 1);
+    }
 
     this.dataProvider.list('rooms/' + this.navParams.data + '/days/', {
       orderByChild: 'startTime',
-      startAt: systemTime,
+      startAt: this.days[0].startTime,
+      entAt: this.days[this.days.length - 1].startTime,
       limitToFirst: 8
     }).subscribe((data: Day[]) => {
-      this.days = data;
+      for (let i = 0, j = 0; i < this.days.length && j < data.length; i++) {
+        if (this.days[i].$key == data[j].$key) {
+          this.days[i] = data[j];
+          j++;
+        }
+      }
     });
   }
 
-  private getDayDateString(day: Day): string {
-    return this.datePipe.transform(day.startTime, 'MMM d, y');
+  /**
+   * disable expired periods and unavailable periods
+   * 
+   * @private
+   * @param {Period} period 
+   * @returns {boolean} 
+   * @memberof SchedulePage
+   */
+  private isDisabled(period: Period): boolean {
+    return period.startTime < new Date().getTime() || !period.available;
   }
 
   /**
@@ -100,7 +139,11 @@ export class SchedulePage {
    */
   private getPeriodInfo(period: Period): string {
     let periodInfo: string = this.datePipe.transform(period.startTime, 'HH:mm') + ' - ' + this.datePipe.transform(period.endTime, 'HH:mm');
-    periodInfo += period.available ? ' Free' : ' Booked \"' + period.groupName + '\"';
+    if (period.startTime < new Date().getTime()) {
+      periodInfo += ' Expired';
+    } else {
+      periodInfo += period.available ? ' Free' : ' Booked \"' + period.groupName + '\"';
+    }
     return periodInfo;
   }
 
@@ -119,6 +162,8 @@ export class SchedulePage {
     } else if (this.periodA == null) {
       // store first selected period
       this.periodA = period;
+    } else if (period == this.periodA) {
+      this.periodA = null;
     } else if (this.periodB == null) {
       // store second selected period
       if (period.startTime < this.periodA.startTime) {
@@ -274,35 +319,6 @@ export class SchedulePage {
       console.log('update room booking success');
     }, error => {
       console.log('update room booking fail');
-    });
-  }
-
-  private testing() {
-    let newDay: Day = {
-      $key: '',
-      startTime: new Date('2017-08-30T08:00:00').getTime(),
-      endTime: new Date('2017-08-30T20:00:00').getTime(),
-      periods: []
-    };
-
-    // console.log(newDay);
-    // console.log(new Date(newDay.startTime));
-    // console.log(new Date(newDay.endTime));
-    let amountTime = newDay.endTime - newDay.startTime;
-    for (let i = 0; i < amountTime; i += PERIOD_CONFIG) {
-      newDay.periods.push({
-        available: true,
-        groupName: '',
-        startTime: newDay.startTime + i,
-        endTime: newDay.startTime + i + PERIOD_CONFIG
-      })
-    }
-    console.log(newDay);
-
-    this.dataProvider.list('rooms/' + this.navParams.data + '/days/').set('30_08_2017', {
-      startTime: newDay.startTime,
-      endTime: newDay.endTime,
-      periods: newDay.periods
     });
   }
 

@@ -9,22 +9,22 @@
 
 <ion-content padding>
 
-  <ion-fab left middle *ngIf="!this.slides.isBeginning()">
+  <ion-fab left middle>
     <button ion-fab color="grey" class="nav-button" mini (click)="lastDay()">
       <ion-icon name="arrow-back"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right middle *ngIf="!this.slides.isEnd()">
+  <ion-fab right middle>
     <button ion-fab color="grey" class="nav-button" mini (click)="nextDay()">
       <ion-icon name="arrow-forward"></ion-icon>
     </button>
   </ion-fab>
-  
+
   <ion-slides pager>
     <ion-slide *ngFor="let day of days; let i = index">
-      <h3 text-center>{{ getDayDateString(day) }}</h3>
+      <h3 text-center>{{ day.startTime | date: 'MMM d, y' }}</h3>
       <ion-list *ngIf="isActiveSlide(i)">
-        <button ion-item full text-center *ngFor="let period of day.periods" [disabled]="!period.available" [color]="getColour(period)"
+        <button ion-item full text-center *ngFor="let period of day.periods" [disabled]="isDisabled(period)" [color]="getColour(period)"
           (click)="selectPeriod(period)">{{ getPeriodInfo(period) }}</button>
       </ion-list>
     </ion-slide>
