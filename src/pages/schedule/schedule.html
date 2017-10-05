@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Schedule</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-fab left middle *ngIf="!this.slides.isBeginning()">
+    <button ion-fab color="grey" class="nav-button" mini (click)="lastDay()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-fab right middle *ngIf="!this.slides.isEnd()">
+    <button ion-fab color="grey" class="nav-button" mini (click)="nextDay()">
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+  </ion-fab>
+  
+  <ion-slides pager>
+    <ion-slide *ngFor="let day of days; let i = index">
+      <h3 text-center>{{ getDayDateString(day) }}</h3>
+      <ion-list *ngIf="isActiveSlide(i)">
+        <button ion-item full text-center *ngFor="let period of day.periods" [disabled]="!period.available" [color]="getColour(period)"
+          (click)="selectPeriod(period)">{{ getPeriodInfo(period) }}</button>
+      </ion-list>
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>
+
+<ion-footer>
+  <button ion-button block (click)="bookRoom()">Book</button>
+</ion-footer>

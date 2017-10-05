@@ -5,7 +5,7 @@ import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Room } from './../../models/room';
 import { DataProvider } from './../../providers/data';
-import { RoomDetailsPage } from './../room-details/room-details';
+import { SchedulePage } from './../schedule/schedule';
 
 @Component({
   selector: 'page-room',
@@ -28,7 +28,7 @@ export class RoomPage {
   }
 
   viewRoomDetail(key: string) {
-    this.navCtrl.push(RoomDetailsPage, key);
+    this.navCtrl.push(SchedulePage, key);
   }
 
   facilitiesToString(facilities: Facility[]): string {

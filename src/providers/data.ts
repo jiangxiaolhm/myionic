@@ -4,6 +4,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import 'rxjs/add/operator/take'
 
 import { Booking } from './../models/booking';
+import { Day } from './../models/day';
 import { Room } from './../models/room';
 import { User } from './../models/user';
 
@@ -13,6 +14,7 @@ export class DataProvider {
     user: FirebaseObjectObservable<User> = null;
     rooms: FirebaseListObservable<Room[]> = null;
     bookings: FirebaseListObservable<Booking[]> = null;
+    days: FirebaseListObservable<Day[]> = null;
 
     constructor(
         private afDB: AngularFireDatabase,
