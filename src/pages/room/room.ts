@@ -13,6 +13,9 @@ import { SchedulePage } from './../schedule/schedule';
 })
 export class RoomPage {
 
+  filterBuilding;
+  filterCapacity;
+  filterType;
   rooms: FirebaseListObservable<Room[]> = null;
 
   constructor(
@@ -43,7 +46,7 @@ export class RoomPage {
     addRoomData() {
       for (var i = 1; i <= 10; i++) {
         this.dataProvider.push("rooms", {
-          name: i + "a",
+          name: i + "b",
           building: "Library",
           location: "Level 01",
           type: "Group Study",
@@ -63,4 +66,18 @@ export class RoomPage {
         });
       }
     }
+
+    filter(building: string, capacity: number, type: string) {
+      if(this.filterBuilding != undefined && building != this.filterBuilding){
+        return false;
+      }
+      if(this.filterCapacity != undefined && capacity != this.filterCapacity){
+        return false;
+      }
+      if(this.filterType != undefined && type != this.filterType){
+        return false;
+      }
+      return true;
+    }
+
 }
