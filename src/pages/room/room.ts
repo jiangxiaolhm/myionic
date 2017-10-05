@@ -66,7 +66,6 @@ export class RoomPage {
       }
     }
 
-
     filter(building: string, capacity: number, type: string) {
       if(this.filterBuilding != undefined && building != this.filterBuilding){
         return false;
