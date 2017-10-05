@@ -1,5 +1,6 @@
 export interface Period {
-    index: number;
+    startTime: number;
+    endTime: number;
     available: boolean;
     groupName: string;
 }
