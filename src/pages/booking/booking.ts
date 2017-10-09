@@ -1,9 +1,10 @@
 import { Room } from './../../models/room';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Booking } from './../../models/booking';
+import { User } from './../../models/user';
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
 
@@ -17,20 +18,23 @@ import 'rxjs/add/operator/toPromise';
   templateUrl: 'booking.html',
 })
 export class BookingPage {
-
+ 
   bookings: FirebaseListObservable<Booking[]> = null;
+ 
+ 
   location: string = 'null';
   constructor(
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
     public navCtrl: NavController,
-    public navParams: NavParams
+    public navParams: NavParams,
+    public alertCtrl: AlertController,
+    
   ) { }
 
   async ionViewDidLoad() {
     
     this.bookings = this.dataProvider.bookings;
-    
     // Get room location using room key from rooms table
     await this.dataProvider.list('rooms', {
       orderByKey: true,
@@ -40,19 +44,23 @@ export class BookingPage {
     }).first().toPromise();
   }
 
+  // Cancel the booking 
   cancel(id){
      this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
-     
   }
 
+  // disable buttons if booking is expired
   isExpired(endTime){
-    var q = new Date();
-    var m = q.getMonth();
-    var d = q.getDate();
-    var y = q.getFullYear();
-    var date = new Date(y,m,d);
-    
-    var endDate = new Date(endTime);
-    return endDate < date;
+    return endTime < new Date().getTime();
   }
-}
+
+  
+    
+  }
+
+ 
+  
+
+
+  
+
