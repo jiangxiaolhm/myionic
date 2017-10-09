@@ -5,7 +5,7 @@ import { FirebaseListObservable } from 'angularfire2/database';
 
 import { Room } from './../../models/room';
 import { DataProvider } from './../../providers/data';
-import { RoomDetailsPage } from './../room-details/room-details';
+import { SchedulePage } from './../schedule/schedule';
 
 @Component({
   selector: 'page-room',
@@ -13,21 +13,25 @@ import { RoomDetailsPage } from './../room-details/room-details';
 })
 export class RoomPage {
 
+  filterBuilding;
+  filterCapacity;
+  filterType;
   rooms: FirebaseListObservable<Room[]> = null;
 
   constructor(
     private dataProvider: DataProvider,
     public navCtrl: NavController,
     public navParams: NavParams
-  ) { }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad RoomPage');
+  ) {
     this.rooms = this.dataProvider.rooms;
   }
 
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad RoomPage');
+  }
+
   viewRoomDetail(key: string) {
-    this.navCtrl.push(RoomDetailsPage, key);
+    this.navCtrl.push(SchedulePage, key);
   }
 
   facilitiesToString(facilities: Facility[]): string {
@@ -42,7 +46,7 @@ export class RoomPage {
     addRoomData() {
       for (var i = 1; i <= 10; i++) {
         this.dataProvider.push("rooms", {
-          name: i + "a",
+          name: i + "b",
           building: "Library",
           location: "Level 01",
           type: "Group Study",
@@ -62,4 +66,18 @@ export class RoomPage {
         });
       }
     }
+
+    filter(building: string, capacity: number, type: string) {
+      if(this.filterBuilding != undefined && building != this.filterBuilding){
+        return false;
+      }
+      if(this.filterCapacity != undefined && capacity != this.filterCapacity){
+        return false;
+      }
+      if(this.filterType != undefined && type != this.filterType){
+        return false;
+      }
+      return true;
+    }
+
 }

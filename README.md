@@ -6,7 +6,6 @@
 ## Install
 ```
 npm install
-npm install firebase angularfire2 --save
 ```
 
 ## This Application was tested with the following configuration

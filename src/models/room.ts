@@ -1,3 +1,4 @@
+import { Day } from './day';
 import { Facility } from './facility';
 
 export interface Room {

@@ -1,4 +1,4 @@
-import { RoomDetailsPage } from './../room-details/room-details';
+import { SchedulePage } from './../schedule/schedule';
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
@@ -10,7 +10,7 @@ import { BookingPage } from './../booking/booking';
   declarations: [
     HomePage,
     RoomPage,
-    RoomDetailsPage,
+    SchedulePage,
     BookingPage
   ],
   imports: [
@@ -19,7 +19,7 @@ import { BookingPage } from './../booking/booking';
   entryComponents: [
     HomePage,
     RoomPage,
-    RoomDetailsPage,
+    SchedulePage,
     BookingPage
   ]
 })

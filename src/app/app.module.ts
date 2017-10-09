@@ -16,6 +16,7 @@ import { FIREBASE_CONFIG } from './app.firebase.config';
 
 import { AuthProvider } from './../providers/auth';
 import { DataProvider } from './../providers/data';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DataProvider } from './../providers/data';
     AngularFireAuth,
     AngularFireDatabase,
     AuthProvider,
-    DataProvider
+    DataProvider,
+    DatePipe
   ]
 })
 export class AppModule { }
