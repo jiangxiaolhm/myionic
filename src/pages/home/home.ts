@@ -31,7 +31,6 @@ export class HomePage {
     // Keep checking auth state
     // Redirect to login page when signout
     this.authProvider.afAuth.authState.subscribe(currentUser => {
-
       if (currentUser && currentUser.email && currentUser.uid) {
         this.toastCtrl.create({
           message: `Welcome to Homepage, ${currentUser.email}`,
@@ -39,9 +38,9 @@ export class HomePage {
         }).present();
 
         // Initilise user object
-        this.dataProvider.user = this.dataProvider.object('/users/'+currentUser.uid);
+        this.dataProvider.user = this.dataProvider.object('/users/' + currentUser.uid);
         // Initilise user's bookings list
-        this.dataProvider.bookings = this.dataProvider.list('/users/'+currentUser.uid+'/bookings');
+        this.dataProvider.bookings = this.dataProvider.list('/users/' + currentUser.uid + '/bookings');
       } else {
         this.toastCtrl.create({
           message: `You are sign out already`,

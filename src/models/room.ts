@@ -10,4 +10,5 @@ export interface Room {
     facilities: Facility[];
     capacity: number;
     notes: string;
+    days: Day[];
 }
