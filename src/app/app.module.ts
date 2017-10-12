@@ -4,6 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { LoginPage } from './../pages/login/login';
 import { RegisterPage } from './../pages/register/register';
@@ -17,6 +18,7 @@ import { FIREBASE_CONFIG } from './app.firebase.config';
 import { AuthProvider } from './../providers/auth';
 import { DataProvider } from './../providers/data';
 import { DatePipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { DatePipe } from '@angular/common';
     AngularFireDatabase,
     AuthProvider,
     DataProvider,
-    DatePipe
+    DatePipe,
+    LocalNotifications
   ]
 })
 export class AppModule { }
