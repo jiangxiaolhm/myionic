@@ -1,40 +1,46 @@
 import { Room } from './../../models/room';
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
-import { FirebaseListObservable } from 'angularfire2/database';
-
+import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { FormsModule } from '@angular/forms';
 import { Booking } from './../../models/booking';
 import { User } from './../../models/user';
+import { ShareBooking } from './../../models/shareBooking';
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
-
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-
+import * as Clipboard from 'clipboard/dist/clipboard.min.js';
+import * as NGClipboard from 'ngclipboard/dist/ngclipboard.min.js';
 
 @Component({
   selector: 'page-booking',
   templateUrl: 'booking.html',
 })
 export class BookingPage {
- 
+  
+  
   bookings: FirebaseListObservable<Booking[]> = null;
- 
- 
+  clipboard : Clipboard;
+  searchBooking: FirebaseListObservable<Booking[]> = null;
   location: string = 'null';
+
   constructor(
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
+    public toastCtrl: ToastController
+  ) { 
     
-  ) { }
+  }
 
   async ionViewDidLoad() {
 
     this.bookings = this.dataProvider.bookings;
+
     // Get room location using room key from rooms table
     await this.dataProvider.list('rooms', {
       orderByKey: true,
@@ -44,22 +50,69 @@ export class BookingPage {
     }).first().toPromise();
   }
 
-  // Cancel the booking 
-  cancel(id){
-     this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
+
+   //share link
+  share(bookingId){
+    this.alertCtrl.create({
+      title: 'Copy the link to your friend.',
+      inputs: [
+        {
+          name: 'link',
+          id: 'copyTarget',
+          value: this.authProvider.afAuth.auth.currentUser.uid + '/' + bookingId
+        },
+      ],
+      buttons: [{
+        text: 'OK',
+        handler: data => {
+          this.navCtrl.push(BookingPage);
+        }
+      },{
+        text:'clipBoard',
+        handler:data => {
+          this.clipboard = new Clipboard('#copyTarget');
+          this.clipboard.on('success', () => this.showMsg(this.toastCtrl));
+        }
+      }]
+    }).present();
+    
   }
 
-  // disable buttons if booking is expired
+
+  // search share booking from given link
+  search(link){
+    var split = link.split("/");
+    this.searchBooking = this.dataProvider.list('users/'+ split[0] + '/bookings/', {
+      orderByKey: '$key',
+      equalTo:  split[1]
+    });
+    console.log(this.searchBooking);
+  }
+  
+ 
+  // Cancel the booking 
+  cancel(id){
+    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
+  }
+
+ // disable buttons if booking is expired
   isExpired(endTime){
     return endTime < new Date().getTime();
   }
 
-  
-    
+
+  //show message when copied
+  showMsg(toastCtrl: ToastController) {
+    let toast = toastCtrl.create({
+        message: 'copied to clipboard',
+        duration: 3000,
+        position: 'top'
+    });
+    toast.present();
   }
 
- 
-  
+
+}
 
 
   

@@ -8,6 +8,29 @@
 </ion-header>
 
 <ion-content padding>
+  
+  <ion-list>
+       <ion-item>
+          <ion-input [(ngModel)]="link" type="text" placeholder="search shared booking"></ion-input>
+        </ion-item>
+        <button (click)="search(link)">Search</button>  
+  </ion-list>
+  
+  <ion-list>
+    <ion-card *ngFor="let search of searchBooking | async">
+      <ion-card-header>
+        <h2>Share Booking Result</h2>
+        Group : {{ search.groupName }}
+      </ion-card-header>
+      <ion-card-content>
+        <h3> Booking ID: {{ search.$key }} </h3>
+        <h3> Room: {{ location }} </h3>
+        <h3> Start time: {{ search.startTime | date:'MMM d, y HH:mm' }} </h3>
+        <h3> End time: {{ search.endTime | date:'MMM d, y HH:mm'}} </h3>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
   <ion-list>
     <ion-card *ngFor="let booking of bookings | async">
       <ion-card-header>
@@ -20,7 +43,7 @@
         <h3> End time: {{ booking.endTime | date:'MMM d, y HH:mm'}} </h3>
       </ion-card-content>
       <button [disabled]="isExpired(booking.endTime)" (click)="cancel(booking.$key)">Cancel</button>
-      <button [disabled]="isExpired(booking.endTime)" (click)="share(booking.$key)">Share</button>
+      <button [disabled]="isExpired(booking.endTime)" id="clp" (click)="share(booking.$key)">Share</button>
     </ion-card>
   </ion-list>
 </ion-content>

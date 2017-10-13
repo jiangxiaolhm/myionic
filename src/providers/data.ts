@@ -7,6 +7,7 @@ import { Booking } from './../models/booking';
 import { Day } from './../models/day';
 import { Room } from './../models/room';
 import { User } from './../models/user';
+import { ShareBooking } from './../models/shareBooking';
 
 @Injectable()
 export class DataProvider {
@@ -15,6 +16,7 @@ export class DataProvider {
     rooms: FirebaseListObservable<Room[]> = null;
     bookings: FirebaseListObservable<Booking[]> = null;
     days: FirebaseListObservable<Day[]> = null;
+    shareBooking: FirebaseListObservable<ShareBooking[]> = null;
 
     constructor(
         private afDB: AngularFireDatabase,
