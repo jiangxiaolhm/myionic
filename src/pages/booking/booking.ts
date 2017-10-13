@@ -1,24 +1,20 @@
-import { Room } from './../../models/room';
 import { Component } from '@angular/core';
-<<<<<<< HEAD
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { FormsModule } from '@angular/forms';
-=======
 import { DatePipe } from '@angular/common';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
-import { FirebaseListObservable } from 'angularfire2/database';
 
->>>>>>> e75112cbe627427f438e6ad1e7da86331afc24af
 import { Booking } from './../../models/booking';
 import { User } from './../../models/user';
-import { ShareBooking } from './../../models/shareBooking';
+import { Room } from './../../models/room';
+
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+
 import * as Clipboard from 'clipboard/dist/clipboard.min.js';
 import * as NGClipboard from 'ngclipboard/dist/ngclipboard.min.js';
 
@@ -41,19 +37,11 @@ export class BookingPage {
     private alertCtrl: AlertController,
     private localNotifications: LocalNotifications,
     public navCtrl: NavController,
-<<<<<<< HEAD
     public navParams: NavParams,
-    public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    private toastCtrl: ToastController
   ) { 
     
   }
-=======
-    public navParams: NavParams
-
-
-  ) { }
->>>>>>> e75112cbe627427f438e6ad1e7da86331afc24af
 
   async ionViewDidLoad() {
 
