@@ -8,12 +8,32 @@
 </ion-header>
 
 <ion-content padding>
-  <!-- For debugging -->
-  <!-- <button ion-button (click)="addRoomData()">addRoomData</button> -->
+
+  <!-- <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-select interface="popover" [(ngModel)]="filterDate">
+      <ion-option value="">Any</ion-option>
+      <ion-option *ngFor="let dateOption of dateOptions" value="{{ dateOption }}">{{ dateOption | date:'MMM d, y' }}</ion-option>
+    </ion-select>
+  </ion-item> -->
+
+  <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-datetime displayFormat="MMM D, YYYY" placeholder="Any" [(ngModel)]="filterDate" [min]="minDate()" [max]="maxDate()"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>StartTime</ion-label>
+    <ion-datetime displayFormat="HH:mm" [(ngModel)]="filterStartTime" hourValues="8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20" minuteValues="0, 30" (ngModelChange)="timeChanged()"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>EndTime</ion-label>
+    <ion-datetime displayFormat="HH:mm" [(ngModel)]="filterEndTime" hourValues="8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20" minuteValues="0, 30" (ngModelChange)="timeChanged()"></ion-datetime>
+  </ion-item>
 
   <ion-item>
     <ion-label>Building</ion-label>
     <ion-select [(ngModel)]="filterBuilding">
+      <ion-option value="">Any</ion-option>
       <ion-option>Library</ion-option>
       <ion-option>Building 11</ion-option>
       <ion-option>Building 6</ion-option>
@@ -24,16 +44,18 @@
   <ion-item>
     <ion-label>Type</ion-label>
     <ion-select [(ngModel)]="filterType">
+      <ion-option value="">Any</ion-option>
       <ion-option>Group Study</ion-option>
-      <ion-option> Individual Study</ion-option>
-      <ion-option> Large Presentation Room</ion-option>
-      <ion-option> Open space</ion-option>
+      <ion-option>Individual Study</ion-option>
+      <ion-option>Large Presentation Room</ion-option>
+      <ion-option>Open space</ion-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
     <ion-label>Capacity</ion-label>
     <ion-select [(ngModel)]="filterCapacity">
+      <ion-option value="">Any</ion-option>
       <ion-option>1</ion-option>
       <ion-option>4</ion-option>
       <ion-option>6</ion-option>
@@ -45,10 +67,10 @@
     </ion-select>
   </ion-item>
 
-
   <ion-list>
-    <ion-card *ngFor="let room of rooms | async" (click)="viewRoomDetail(room.$key)">
-      <button ion-item *ngIf="filter(room.building, room.capacity, room.type)">
+    <div *ngFor="let room of rooms">
+      <ion-card *ngIf="filter(room)" (click)="viewSchedule(room.$key)">
+        <button ion-item>
           <ion-card-header>
               Room: {{ room.name }}
           </ion-card-header>
@@ -61,6 +83,7 @@
               <h3> Notes: {{ room.notes }} </h3>
           </ion-card-content>
          </button>
-    </ion-card>
+      </ion-card>
+    </div>
   </ion-list>
 </ion-content>

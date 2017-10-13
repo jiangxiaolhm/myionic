@@ -1,7 +1,7 @@
 import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { NavController, NavParams, AlertController, Slides } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Slides, LoadingController } from 'ionic-angular';
 
 import { PERIOD_CONFIG, MAX_ADVANCE_BOOKING_DAY } from './../../app/app.firebase.config';
 import { Period } from './../../models/period';
@@ -9,6 +9,8 @@ import { Day } from './../../models/day';
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
 import { BookingPage } from './../booking/booking';
+
+import { Subscription } from 'rxjs/subscription'
 
 @Component({
   selector: 'page-schedule',
@@ -19,9 +21,8 @@ export class SchedulePage {
 
   @ViewChild(Slides)
   private slides: Slides;
-
-  private days: Day[] = null;
-
+  private slidesIndex: number = 0;
+  private days: Day[] = [];
   private periodA: Period = null;
   private periodB: Period = null;
 
@@ -29,18 +30,17 @@ export class SchedulePage {
     private datePipe: DatePipe,
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
+    private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams
   ) {
-    // this.setDay('30_08_2017');
     this.initialiseDays();
-
-    // this.testing();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SchedulePage');
+    this.slidesIndex = this.navParams.data.slidesIndex;
   }
 
   /**
@@ -50,16 +50,15 @@ export class SchedulePage {
    * @memberof SchedulePage
    */
   private initialiseDays() {
-    // testing data
-    // let startTime = new Date('2017-08-29T08:00:00');
-    // let endTime = new Date('2017-08-29T20:00:00');
-    // system datetime
+    const loading = this.loadingCtrl.create({
+      content: 'Loading ...'
+    });
+    loading.present();
+
     let startTime = new Date();
     let endTime = new Date();
     startTime.setHours(8, 0, 0, 0);
     endTime.setHours(20, 0, 0, 0);
-
-    this.days = [];
 
     for (let i = 0; i <= 7; i++) {
       let day: Day = {
@@ -81,23 +80,28 @@ export class SchedulePage {
       endTime.setDate(endTime.getDate() + 1);
     }
 
-    this.dataProvider.list('rooms/' + this.navParams.data + '/days/', {
+    this.bindDays();
+    loading.dismiss();
+  }
+
+  async bindDays() {
+    await this.dataProvider.list('rooms/' + this.navParams.data.roomKey + '/days/', {
       orderByChild: 'startTime',
       startAt: this.days[0].startTime,
       entAt: this.days[this.days.length - 1].startTime,
       limitToFirst: 8
-    }).subscribe((data: Day[]) => {
+    }).map((data: Day[]) => {
       for (let i = 0, j = 0; i < this.days.length && j < data.length; i++) {
         if (this.days[i].$key == data[j].$key) {
           this.days[i] = data[j];
           j++;
         }
       }
-    });
+    }).first().toPromise();
   }
 
   /**
-   * disable expired periods and unavailable periods
+   * disable unavailable periods
    * 
    * @private
    * @param {Period} period 
@@ -105,7 +109,19 @@ export class SchedulePage {
    * @memberof SchedulePage
    */
   private isDisabled(period: Period): boolean {
-    return period.startTime < new Date().getTime() || !period.available;
+    return !period.available;
+  }
+
+  /**
+   * hide expired periods
+   * 
+   * @private
+   * @param {Period} period 
+   * @returns {boolean} 
+   * @memberof SchedulePage
+   */
+  private isHidden(period: Period): boolean {
+    return period.startTime < new Date().getTime();
   }
 
   /**
@@ -281,7 +297,7 @@ export class SchedulePage {
   private addUserBooking(groupName: string, bookingStartTime: number, bookingEndTime: number) {
     this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
       groupName: groupName,
-      roomKey: this.navParams.data,
+      roomKey: this.navParams.data.roomKey,
       startTime: bookingStartTime,
       endTime: bookingEndTime
     }).then(data => {
@@ -310,7 +326,7 @@ export class SchedulePage {
       }
     }
     this.dataProvider.update(
-      'rooms/' + this.navParams.data + '/days/' + this.datePipe.transform(day.startTime, "dd_MM_yyyy"), {
+      'rooms/' + this.navParams.data.roomKey + '/days/' + this.datePipe.transform(day.startTime, "dd_MM_yyyy"), {
         startTime: day.startTime,
         endTime: day.endTime,
         periods: day.periods

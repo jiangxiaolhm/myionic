@@ -44,6 +44,8 @@
       </ion-card-content>
       <button [disabled]="isExpired(booking.endTime)" (click)="cancel(booking.$key)">Cancel</button>
       <button [disabled]="isExpired(booking.endTime)" id="clp" (click)="share(booking.$key)">Share</button>
+      <button (click)="cancel(booking.$key)" >Cancel</button>
+      <button (click)="setNotification(booking.startTime)" style="float: right;">Notification</button>
     </ion-card>
   </ion-list>
 </ion-content>

@@ -20,11 +20,11 @@
     </button>
   </ion-fab>
 
-  <ion-slides pager>
+  <ion-slides pager [initialSlide]="slidesIndex">
     <ion-slide *ngFor="let day of days; let i = index">
       <h3 text-center>{{ day.startTime | date: 'MMM d, y' }}</h3>
       <ion-list *ngIf="isActiveSlide(i)">
-        <button ion-item full text-center *ngFor="let period of day.periods" [disabled]="isDisabled(period)" [color]="getColour(period)"
+        <button ion-item full text-center *ngFor="let period of day.periods" [hidden]="isHidden(period)" [disabled]="isDisabled(period)" [color]="getColour(period)"
           (click)="selectPeriod(period)">{{ getPeriodInfo(period) }}</button>
       </ion-list>
     </ion-slide>

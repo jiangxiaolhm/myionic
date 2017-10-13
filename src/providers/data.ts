@@ -9,11 +9,13 @@ import { Room } from './../models/room';
 import { User } from './../models/user';
 import { ShareBooking } from './../models/shareBooking';
 
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
+
 @Injectable()
 export class DataProvider {
 
     user: FirebaseObjectObservable<User> = null;
-    rooms: FirebaseListObservable<Room[]> = null;
     bookings: FirebaseListObservable<Booking[]> = null;
     days: FirebaseListObservable<Day[]> = null;
     shareBooking: FirebaseListObservable<ShareBooking[]> = null;
@@ -21,9 +23,7 @@ export class DataProvider {
     constructor(
         private afDB: AngularFireDatabase,
         private authProvider: AngularFireAuth
-    ) {
-        this.rooms = this.list('/rooms');
-    }
+    ) { }
 
     /**
      * Push new data to the list of firedatabase with given path 
