@@ -1,17 +1,20 @@
-import { Room } from './../../models/room';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { Booking } from './../../models/booking';
 import { User } from './../../models/user';
+import { Room } from './../../models/room';
+
 import { DataProvider } from './../../providers/data';
 import { AuthProvider } from './../../providers/auth';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+
 import * as Clipboard from 'clipboard/dist/clipboard.min.js';
 import * as NGClipboard from 'ngclipboard/dist/ngclipboard.min.js';
 
@@ -142,49 +145,49 @@ export class BookingPage {
   
   
 
-  // private setNotification(bookingStartTime) {
-  //     let prompt = this.alertCtrl.create({
-  //               title: 'Remind Me In ',
-  //               inputs: [
-  //                {
-  //                  type: 'radio',
-  //                  label: 'now(should be: 30mins)',
-  //                  value: '0'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '1 hour',
-  //                  value:'3600000'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '2 hours',
-  //                  value:'7200000'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '1 days',
-  //                  value:'86400000'
-  //                },
-  //              ],
-  //               buttons: [
-  //                 {
-  //                   text:'Cancel',
-  //                   handler: data => {
-  //                     console.log('Cancel clicked');
-  //                   }
-  //                 },
-  //                 {
-  //                   text:'Set',
-  //                   handler: data => {
-  //                     console.log('Set clicked');
-  //                     this.scheduleNotification(bookingStartTime,data);
-  //                   }
-  //                 }
-  //               ]
-  //     });
-  //           prompt.present();
-  // }
+  private setNotification(bookingStartTime) {
+      let prompt = this.alertCtrl.create({
+                title: 'Remind Me In ',
+                inputs: [
+                 {
+                   type: 'radio',
+                   label: 'now(should be: 30mins)',
+                   value: '0'
+                 },
+                 {
+                   type:'radio',
+                   label: '1 hour',
+                   value:'3600000'
+                 },
+                 {
+                   type:'radio',
+                   label: '2 hours',
+                   value:'7200000'
+                 },
+                 {
+                   type:'radio',
+                   label: '1 days',
+                   value:'86400000'
+                 },
+               ],
+                buttons: [
+                  {
+                    text:'Cancel',
+                    handler: data => {
+                      console.log('Cancel clicked');
+                    }
+                  },
+                  {
+                    text:'Set',
+                    handler: data => {
+                      console.log('Set clicked');
+                      this.scheduleNotification(bookingStartTime,data);
+                    }
+                  }
+                ]
+      });
+            prompt.present();
+  }
 
   // scheduleNotification(time,value) {
   //   var v = +value;
