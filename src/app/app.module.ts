@@ -4,7 +4,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { LoginPage } from './../pages/login/login';
 import { RegisterPage } from './../pages/register/register';
@@ -47,7 +46,7 @@ import { DatePipe } from '@angular/common';
     AuthProvider,
     DataProvider,
     DatePipe,
-    LocalNotifications
+    
   ]
 })
 export class AppModule { }

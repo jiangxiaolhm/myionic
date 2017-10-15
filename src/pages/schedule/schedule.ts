@@ -333,8 +333,19 @@ export class SchedulePage {
       }
     ).then(() => {
       console.log('update room booking success');
+      this.navCtrl.push(BookingPage);
     }, error => {
       console.log('update room booking fail');
+      this.alertCtrl.create({
+        title: 'Booking was unsuccessful, please try again',
+        buttons: [{
+          text: 'OK',
+          handler: data => {
+            this.navCtrl.push(SchedulePage);
+          }
+        }]
+      }).present();
+      
     });
   }
 

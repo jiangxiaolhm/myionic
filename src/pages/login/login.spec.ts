@@ -7,20 +7,21 @@ import { AuthProvider } from './../../providers/auth';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from './../../models/user';
 import { Booking } from './../../models/booking';
-//create mock  
+
+ 
 describe('Login : LoginPage', () =>{
     let comp: LoginPage;
     let fixture: ComponentFixture<LoginPage>;
     let de: DebugElement;
     let loginBtn: DebugElement;
     let regBtn: DebugElement;
-    let authMock = {
-        "login": (auth: {
-            provider?: AuthProvider;
-        }) => {}
-    
+
+    class authMock {
+        login(user: User):  Promise<void>  {
+            return Promise.resolve()
+        }
     };
-    
+  
     
    
     beforeEach(async(() => {
@@ -39,6 +40,7 @@ describe('Login : LoginPage', () =>{
                
             ]
         });
+       
       }));
 
     
@@ -47,26 +49,38 @@ describe('Login : LoginPage', () =>{
             fixture = TestBed.createComponent(LoginPage);
             comp = fixture.componentInstance;        
             loginBtn = fixture.debugElement.query(By.css('.marginTop'));
-            regBtn = fixture.debugElement.query(By.css('.regBTN'));         
+            regBtn = fixture.debugElement.query(By.css('.regBTN'));     
+            
         });
-
-
-
+        
+        let _user : User = {
+                    $key: '1XeHDxrlOAP5XRKu8rITXajgU055',
+                    name:'fake',
+                    email: 'fake@test.com',
+                    password: '1234',
+                    bookings : {
+                        $key: '1XnHDxrlOAP5XRKu8rITXajgU055',
+                        groupName: 'group1',
+                        roomKey: 'roomKey',
+                        startTime: new Date,
+                        endTime: new Date
+                    }
+        }
       
-        it('should create component', () => {
+        it('should create login component', () => {
             expect(comp instanceof LoginPage).toBe(true);
         });
     
      
-        it('click login button the login function should be called', () => {
+        it('click login, it should call login method', () => {
             spyOn(comp, 'login');
             loginBtn.triggerEventHandler('click', null);
             expect(comp.login).toHaveBeenCalled();
+           
         });
 
-    
 
-        it('click register button the register function should be called', () => {
+        it('click register, it should redirect to register page', () => {
             spyOn(comp, 'register');
             regBtn.triggerEventHandler('click', null);
             expect(comp.register).toHaveBeenCalled();

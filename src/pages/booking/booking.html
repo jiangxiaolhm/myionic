@@ -27,6 +27,7 @@
         <h3> Room: {{ location }} </h3>
         <h3> Start time: {{ search.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ search.endTime | date:'MMM d, y HH:mm'}} </h3>
+        <button [disabled]="isExpired(search.endTime)" (click)="add(search.groupName, search.roomKey, search.startTime, search.endTime, location)">Add to your list</button>
       </ion-card-content>
     </ion-card>
   </ion-list>
@@ -44,7 +45,6 @@
       </ion-card-content>
       <button [disabled]="isExpired(booking.endTime)" (click)="cancel(booking.$key)">Cancel</button>
       <button [disabled]="isExpired(booking.endTime)" id="clp" (click)="share(booking.$key)">Share</button>
-      <button (click)="cancel(booking.$key)" >Cancel</button>
       <button (click)="setNotification(booking.startTime)" style="float: right;">Notification</button>
     </ion-card>
   </ion-list>
