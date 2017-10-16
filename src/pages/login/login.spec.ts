@@ -3,29 +3,27 @@ import { DebugElement, NO_ERRORS_SCHEMA }    from '@angular/core';
 import { By }              from '@angular/platform-browser';
 import { IonicModule, NavController, NavParams, ToastController, LoadingController } from "ionic-angular/index";
 import { LoginPage } from './../login/login';
+import { RegisterPage } from './../register/register';
 import { AuthProvider } from './../../providers/auth';
+import { DataProvider } from './../../providers/data';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from './../../models/user';
 import { Booking } from './../../models/booking';
 
  
 describe('Login : LoginPage', () =>{
-
-    
     let comp: LoginPage;
+    let af: AuthProvider;
     let fixture: ComponentFixture<LoginPage>;
     let de: DebugElement;
     let loginBtn: DebugElement;
     let regBtn: DebugElement;
-    let usernameField : DebugElement;
-    let passwordField : DebugElement;
+    let usernameField: DebugElement;
+    let passwordField: DebugElement;
 
-    class LoginMock  {
-       
+    class LoginMock{
         login(user:User): Promise<any> {
-            let auth = new AuthMock();
-            auth.login(user);
-            return  Promise.resolve()
+            return Promise.resolve()
         };
     }
 
@@ -42,8 +40,9 @@ describe('Login : LoginPage', () =>{
             return Promise.resolve()
         };
     }
+
+
     
-    // let af:AuthMock;
     let _user : User = {
         $key: '1XeHDxrlOAP5XRKu8rITXajgU055',
         name:'fake',
@@ -66,16 +65,17 @@ describe('Login : LoginPage', () =>{
             ],
          
             providers:[
-                AuthMock,
-                NavController, 
+                NavController, AuthProvider, LoginPage,
                 ToastController, 
                 LoadingController,
                 {provide: NavParams, useValue: NavParams},
                 {provide: AuthProvider, useClass: AuthMock},
             ]
-        });
-       
+        }).compileComponents();
+        
       }));
+
+      
      
 
     describe('login component', () =>{
@@ -86,46 +86,44 @@ describe('Login : LoginPage', () =>{
             regBtn = fixture.debugElement.query(By.css('.regBTN'));     
             usernameField = fixture.debugElement.query(By.css('.input1'));
             passwordField = fixture.debugElement.query(By.css('.input2'));
-            
         });
         
+        afterEach(() => {
+            fixture.destroy();
+            comp = null;
+            regBtn = null;
+            loginBtn = null;
+          });
 
-        xit('should create login component', () => {
+        it('should create login component', () => {
             expect(comp instanceof LoginPage).toBe(true);
         });
     
+        it('TestBed login created', () => {
+            expect(fixture).toBeTruthy();
+            expect(comp).toBeTruthy();
+         });
      
-        xit('click login, it should call login method', () => {
+        it('click login, it should call login function', () => {
             spyOn(comp, 'login');
             loginBtn.triggerEventHandler('click', null);
             expect(comp.login).toHaveBeenCalled();
-           
         });
 
-        it('It should call login service', ()=> {
-            let user : User;        
-            spyOn(AuthMock.prototype, 'login');
-            comp.login(user);
-            expect(AuthMock.prototype.login).toHaveBeenCalled();
-          });
-        
-
-        xit('Entering email and password  loggedIn event', () => {
-            // usernameField.nativeElement.value = "fake@test.com"; 
-            // passwordField.nativeElement.value = "1234";
-            comp.login(_user);
-            expect(_user.email).toBe("fake@test.com");
-            expect(_user.password).toBe("1234");
-          });
-
-        
-        xit('click register, it should redirect to register page', () => {
+    
+        it('click register, it should call register function', () => {
             spyOn(comp, 'register');
             regBtn.triggerEventHandler('click', null);
             expect(comp.register).toHaveBeenCalled();
         });
-        
 
+        it('should launch register page', () => {
+            let navCtrl = fixture.debugElement.injector.get(NavController);
+            spyOn(navCtrl, 'push');
+            regBtn.triggerEventHandler('click', null);
+            expect(navCtrl.push).toHaveBeenCalledWith(RegisterPage);
+        });
+        
     
     }); 
  
