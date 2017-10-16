@@ -145,49 +145,49 @@ export class BookingPage {
   
   
 
-  private setNotification(bookingStartTime) {
-      let prompt = this.alertCtrl.create({
-                title: 'Remind Me In ',
-                inputs: [
-                 {
-                   type: 'radio',
-                   label: 'now(should be: 30mins)',
-                   value: '0'
-                 },
-                 {
-                   type:'radio',
-                   label: '1 hour',
-                   value:'3600000'
-                 },
-                 {
-                   type:'radio',
-                   label: '2 hours',
-                   value:'7200000'
-                 },
-                 {
-                   type:'radio',
-                   label: '1 days',
-                   value:'86400000'
-                 },
-               ],
-                buttons: [
-                  {
-                    text:'Cancel',
-                    handler: data => {
-                      console.log('Cancel clicked');
-                    }
-                  },
-                  {
-                    text:'Set',
-                    handler: data => {
-                      console.log('Set clicked');
-                      this.scheduleNotification(bookingStartTime,data);
-                    }
-                  }
-                ]
-      });
-            prompt.present();
-  }
+  // private setNotification(bookingStartTime) {
+  //     let prompt = this.alertCtrl.create({
+  //               title: 'Remind Me In ',
+  //               inputs: [
+  //                {
+  //                  type: 'radio',
+  //                  label: 'now(should be: 30mins)',
+  //                  value: '0'
+  //                },
+  //                {
+  //                  type:'radio',
+  //                  label: '1 hour',
+  //                  value:'3600000'
+  //                },
+  //                {
+  //                  type:'radio',
+  //                  label: '2 hours',
+  //                  value:'7200000'
+  //                },
+  //                {
+  //                  type:'radio',
+  //                  label: '1 days',
+  //                  value:'86400000'
+  //                },
+  //              ],
+  //               buttons: [
+  //                 {
+  //                   text:'Cancel',
+  //                   handler: data => {
+  //                     console.log('Cancel clicked');
+  //                   }
+  //                 },
+  //                 {
+  //                   text:'Set',
+  //                   handler: data => {
+  //                     console.log('Set clicked');
+  //                     this.scheduleNotification(bookingStartTime,data);
+  //                   }
+  //                 }
+  //               ]
+  //     });
+  //           prompt.present();
+  // }
 
   // scheduleNotification(time,value) {
   //   var v = +value;
