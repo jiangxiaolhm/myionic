@@ -27,7 +27,7 @@ describe('MyApp Component', () => {
     component = fixture.componentInstance;
   });
 
-  xit ('App component should be created', () => {
+  it ('App component should be created', () => {
     expect(component instanceof MyApp).toBe(true);
   });
 
