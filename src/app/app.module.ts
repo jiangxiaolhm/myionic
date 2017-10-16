@@ -1,3 +1,4 @@
+import { Clipboard } from '@ionic-native/clipboard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -46,7 +47,7 @@ import { DatePipe } from '@angular/common';
     AuthProvider,
     DataProvider,
     DatePipe,
-    
+    Clipboard
   ]
 })
 export class AppModule { }

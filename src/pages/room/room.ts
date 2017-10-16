@@ -53,6 +53,7 @@ export class RoomPage {
 
   /**
    * Direct to room's schedule page with room key
+   * Send index of date to set active slide index.
    * 
    * @private
    * @param {string} key 
@@ -81,17 +82,38 @@ export class RoomPage {
     return result;
   }
 
+  /**
+   * Get and transform today to ISO format
+   * 
+   * @private
+   * @returns {string} 
+   * @memberof RoomPage
+   */
   private minDate(): string {
     return this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   }
 
+  /**
+   * Get and transform next 7th day to ISO format
+   * 
+   * @private
+   * @returns {string} 
+   * @memberof RoomPage
+   */
   private maxDate(): string {
     let date = new Date();
     date.setDate(date.getDate() + 7);
     return this.datePipe.transform(date, 'yyyy-MM-dd');
   }
 
-  private timeChanged() {
+  /**
+   * Update selected times
+   * Transform datetime from ISO format to number of miliseconds.
+   * 
+   * @private
+   * @memberof RoomPage
+   */
+  private timeChanged(): void {
     if (this.filterStartTime != '') {
       this.filterStartTimeNumber = new Date(this.filterDate + 'T' + this.filterStartTime + ':00.000').getTime();
     } else {
@@ -106,42 +128,53 @@ export class RoomPage {
     }
   }
 
-  // debugging add test data
-  addRoomData() {
-    for (var i = 1; i <= 10; i++) {
-      this.dataProvider.push('rooms', {
-        name: i + 'b',
-        building: 'Building 11',
-        location: 'Level 01',
-        type: 'Individual Study',
-        facilities: [{
-          name: 'computer',
-          quantity: 1
-        }, {
-          name: 'whiteboard',
-          quantity: 1
-        }],
-        capacity: 4,
-        notes: ''
-      }).then((data) => {
-        console.log('#' + i + ' success ' + data);
-      }, (error) => {
-        console.log('#' + i + ' fail ' + error);
-      });
-    }
-  }
+  // add test data for debugging
+  // private addRoomData() {
+  //   for (var i = 1; i <= 10; i++) {
+  //     this.dataProvider.push('rooms', {
+  //       name: i + 'b',
+  //       building: 'Building 11',
+  //       location: 'Level 01',
+  //       type: 'Individual Study',
+  //       facilities: [{
+  //         name: 'computer',
+  //         quantity: 1
+  //       }, {
+  //         name: 'whiteboard',
+  //         quantity: 1
+  //       }],
+  //       capacity: 4,
+  //       notes: ''
+  //     }).then((data) => {
+  //       console.log('#' + i + ' success ' + data);
+  //     }, (error) => {
+  //       console.log('#' + i + ' fail ' + error);
+  //     });
+  //   }
+  // }
 
-  private filter(room: Room) {
-
+  /**
+   * Filter room with properties
+   * 
+   * @private
+   * @param {Room} room 
+   * @returns {boolean} 
+   * @memberof RoomPage
+   */
+  private filter(room: Room): boolean {
+    // Filter by building
     if (this.filterBuilding != '' && room.building != this.filterBuilding) {
       return false;
     }
+    // Filter by room capacity
     if (this.filterCapacity != '' && room.capacity != this.filterCapacity) {
       return false;
     }
+    // Filter by room type
     if (this.filterType != '' && room.type != this.filterType) {
       return false;
     }
+    // Filter by date and time
     if (this.filterDate != '') {
       let date = new Date(this.filterDate + 'T00:00:00.000');
       let today = new Date();
@@ -151,10 +184,8 @@ export class RoomPage {
         if (room.days) {
           let day: Day = room.days[this.datePipe.transform(date, "dd_MM_yyyy")];
           if (day != undefined) {
-            let startTime = new Date(this.filterDate + 'T' + this.filterStartTime + ':00.000').getTime();
-            let endTime = new Date(this.filterDate + 'T' + this.filterEndTime + ':00.000').getTime();
             for (let i = 0; i < day.periods.length; i++) {
-              if (day.periods[i].startTime >= startTime && day.periods[i].endTime <= endTime) {
+              if (day.periods[i].startTime >= this.filterStartTimeNumber && day.periods[i].endTime <= this.filterEndTimeNumber) {
                 if (!day.periods[i].available) {
                   return false;
                 }

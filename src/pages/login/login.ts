@@ -1,12 +1,13 @@
-import { DataProvider } from './../../providers/data';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import { User } from './../../models/user';
+
 import { HomePage } from './../home/home';
 import { RegisterPage } from './../register/register';
 
 import { AuthProvider } from './../../providers/auth';
+import { DataProvider } from './../../providers/data';
 
 @Component({
   selector: 'page-login',
@@ -30,9 +31,11 @@ export class LoginPage {
 
   /**
    * Login with user email and password
-   * @param user 
+   * 
+   * @param {User} user 
+   * @memberof LoginPage
    */
-  login(user: User) {
+  login(user: User): void {
     const loading = this.loadingCtrl.create({
       content: "Please waiting ..."
     });
@@ -40,9 +43,12 @@ export class LoginPage {
     this.authProvier.login(user).then((data) => {
       loading.dismiss();
       this.navCtrl.setRoot(HomePage);
+      this.toastCtrl.create({
+        message: `Welcome to Homepage, ${data.email}`,
+        duration: 2000
+      }).present();
     }, (error) => {
       loading.dismiss();
-      console.log(error);
       this.toastCtrl.create({
         message: `${error.message}`,
         showCloseButton: true
@@ -52,8 +58,10 @@ export class LoginPage {
 
   /**
    * Navigate to register page
+   * 
+   * @memberof LoginPage
    */
-  register() {
+  register(): void {
     this.navCtrl.push(RegisterPage);
   }
 

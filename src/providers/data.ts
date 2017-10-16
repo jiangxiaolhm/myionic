@@ -17,7 +17,6 @@ export class DataProvider {
 
     user: FirebaseObjectObservable<User> = null;
     bookings: FirebaseListObservable<Booking[]> = null;
-    // days: FirebaseListObservable<Day[]> = null;
     // shareBooking: FirebaseListObservable<ShareBooking[]> = null;
 
     constructor(
