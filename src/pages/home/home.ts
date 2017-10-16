@@ -10,6 +10,8 @@ import { RoomPage } from './../room/room';
 import { AuthProvider } from './../../providers/auth';
 import { DataProvider } from './../../providers/data';
 
+import { User } from './../../models/user';
+
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -36,7 +38,9 @@ export class HomePage {
     this.authStateSubscription = this.authProvider.afAuth.authState.subscribe(currentUser => {
       if (currentUser && currentUser.email && currentUser.uid) {
         // Initilise user object
-        this.dataProvider.user = this.dataProvider.object('/users/' + currentUser.uid);
+        this.dataProvider.getUser(currentUser.uid).then((user: User) => {
+          this.dataProvider.user = user;
+        });
         // Initilise user's bookings list
         this.dataProvider.bookings = this.dataProvider.list('/users/' + currentUser.uid + '/bookings');
       } else {

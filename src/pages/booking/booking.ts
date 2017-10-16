@@ -1,3 +1,5 @@
+import { UtilProvider } from './../../providers/util';
+import { Period } from './../../models/period';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
@@ -6,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { Booking } from './../../models/booking';
+import { Day } from './../../models/day';
 import { User } from './../../models/user';
 import { Room } from './../../models/room';
 
@@ -33,6 +36,7 @@ export class BookingPage {
     private datePipe: DatePipe,
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
+    private utilProvider: UtilProvider,
     private alertCtrl: AlertController,
     private clipboard: Clipboard,
     public navCtrl: NavController,
@@ -103,8 +107,38 @@ export class BookingPage {
 
 
   // Cancel the booking 
-  cancel(id) {
-    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', id);
+  /**
+   * Cancel booking
+   * The owner can cancel booking and update availability of room.
+   * The shared user can cancel booking from user booking list.
+   * 
+   * @param {Booking} booking 
+   * @memberof BookingPage
+   */
+  async cancel(booking: Booking) {
+    // If current user is the booking owner.
+    if (booking.ownerId == this.authProvider.afAuth.auth.currentUser.uid) {
+      let dayKey: string = this.utilProvider.getTimeToDayKeyFormat(booking.startTime);
+      let theDay: Day = null;
+      await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
+        theDay = day;
+      });
+      
+      theDay.periods.forEach((period: Period) => {
+        if (period.startTime >= booking.startTime && period.endTime <= booking.endTime) {
+          if (period.ownerId == booking.ownerId) {
+            console.log('aa');
+            period.available = true;
+            period.groupName = '';
+            period.ownerId = '';
+          }
+        }
+      });
+      // Update the day of booking to available
+      this.dataProvider.setDay(booking.roomKey, dayKey, theDay);
+    }
+    // Remove booking from user table.
+    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', booking.$key);
   }
 
   // disable buttons if booking is expired

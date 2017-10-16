@@ -41,10 +41,11 @@ export class RoomPage {
 
     this.filterDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
-    this.dataProvider.list('/rooms').map((data: Room[]) => {
-      this.rooms = data;
+    this.dataProvider.getRooms().then((rooms: Room[]) => {
+      this.rooms = rooms;
+      this.dataProvider.rooms = rooms;
       loading.dismiss();
-    }).first().toPromise();
+    });
   }
 
   ionViewDidLoad() {

@@ -17,6 +17,7 @@ import { FIREBASE_CONFIG } from './app.firebase.config';
 
 import { AuthProvider } from './../providers/auth';
 import { DataProvider } from './../providers/data';
+import { UtilProvider } from './../providers/util';
 import { DatePipe } from '@angular/common';
 
 
@@ -46,6 +47,7 @@ import { DatePipe } from '@angular/common';
     AngularFireDatabase,
     AuthProvider,
     DataProvider,
+    UtilProvider,
     DatePipe,
     Clipboard
   ]
