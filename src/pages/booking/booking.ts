@@ -1,3 +1,5 @@
+import { UtilProvider } from './../../providers/util';
+import { Period } from './../../models/period';
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
@@ -6,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { Booking } from './../../models/booking';
+import { Day } from './../../models/day';
 import { User } from './../../models/user';
 import { Room } from './../../models/room';
 
@@ -15,18 +18,17 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import * as Clipboard from 'clipboard/dist/clipboard.min.js';
-import * as NGClipboard from 'ngclipboard/dist/ngclipboard.min.js';
+import { Clipboard } from '@ionic-native/clipboard';
 
 @Component({
   selector: 'page-booking',
   templateUrl: 'booking.html',
 })
 export class BookingPage {
-  
-  
+
+
   bookings: FirebaseListObservable<Booking[]> = null;
-  clipboard : Clipboard;
+  // clipboard: Clipboard;
   searchBooking: FirebaseListObservable<Booking[]> = null;
   location: string = 'null';
 
@@ -34,12 +36,14 @@ export class BookingPage {
     private datePipe: DatePipe,
     private dataProvider: DataProvider,
     private authProvider: AuthProvider,
+    private utilProvider: UtilProvider,
     private alertCtrl: AlertController,
+    private clipboard: Clipboard,
     public navCtrl: NavController,
     public navParams: NavParams,
     public toastCtrl: ToastController
-  ) { 
-    
+  ) {
+
   }
 
   async ionViewDidLoad() {
@@ -56,8 +60,8 @@ export class BookingPage {
   }
 
 
-   //share link
-  share(bookingId){
+  //share link
+  share(bookingId) {
     // push to share booking table
 
     //share link pop up using key of sharebooking table
@@ -73,38 +77,72 @@ export class BookingPage {
       buttons: [{
         text: 'OK',
         handler: data => {
-          this.navCtrl.push(BookingPage);
         }
-      },{
-        text:'clipBoard',
-        handler:data => {
-          this.clipboard = new Clipboard('#copyTarget');
-          this.clipboard.on('success', () => this.showMsg(this.toastCtrl));
+      }, {
+        text: 'clipBoard',
+        handler: data => {
+          this.clipboard.copy('hello world');
+          // .then(data => {
+          //   console.log('success');
+          //   this.showMsg(this.toastCtrl);
+          // })
+          // this.clipboard = new Clipboard('#copyTarget');
+          // this.clipboard.on('success', () => this.showMsg(this.toastCtrl));
         }
       }]
     }).present();
-    
+
   }
 
 
   // search share booking from given link
-  search(link){
+  search(link) {
     var split = link.split("/");
-    this.searchBooking = this.dataProvider.list('users/'+ split[0] + '/bookings/', {
+    this.searchBooking = this.dataProvider.list('users/' + split[0] + '/bookings/', {
       orderByKey: '$key',
-      equalTo:  split[1]
+      equalTo: split[1]
     });
     console.log(this.searchBooking);
   }
-  
- 
+
+
   // Cancel the booking 
-  cancel(id){
-    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/',id);
+  /**
+   * Cancel booking
+   * The owner can cancel booking and update availability of room.
+   * The shared user can cancel booking from user booking list.
+   * 
+   * @param {Booking} booking 
+   * @memberof BookingPage
+   */
+  async cancel(booking: Booking) {
+    // If current user is the booking owner.
+    if (booking.ownerId == this.authProvider.afAuth.auth.currentUser.uid) {
+      let dayKey: string = this.utilProvider.getTimeToDayKeyFormat(booking.startTime);
+      let theDay: Day = null;
+      await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
+        theDay = day;
+      });
+      
+      theDay.periods.forEach((period: Period) => {
+        if (period.startTime >= booking.startTime && period.endTime <= booking.endTime) {
+          if (period.ownerId == booking.ownerId) {
+            console.log('aa');
+            period.available = true;
+            period.groupName = '';
+            period.ownerId = '';
+          }
+        }
+      });
+      // Update the day of booking to available
+      this.dataProvider.setDay(booking.roomKey, dayKey, theDay);
+    }
+    // Remove booking from user table.
+    this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', booking.$key);
   }
 
- // disable buttons if booking is expired
-  isExpired(endTime){
+  // disable buttons if booking is expired
+  isExpired(endTime) {
     return endTime < new Date().getTime();
   }
 
@@ -112,38 +150,36 @@ export class BookingPage {
   //show message when copied
   showMsg(toastCtrl: ToastController) {
     let toast = toastCtrl.create({
-        message: 'copied to clipboard',
-        duration: 3000,
-        position: 'top'
+      message: 'copied to clipboard',
+      duration: 3000,
+      position: 'top'
     });
     toast.present();
   }
 
-  add(groupName, roomKey, startTime, endTime, location){
-      this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
-        groupName: groupName,
-        roomKey: roomKey,
-        startTime: startTime,
-        endTime: endTime,
-        location: location
+  add(groupName, roomKey, startTime, endTime, location) {
+    this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
+      groupName: groupName,
+      roomKey: roomKey,
+      startTime: startTime,
+      endTime: endTime,
+      location: location
 
-      }).then(data => {
-        console.log('add success');
-        this.alertCtrl.create({
-          title: 'Add to your booking list successfully',
-          buttons: [{
-            text: 'OK',
-            handler: data => {
-              this.navCtrl.push(BookingPage);
-            }
-          }]
-        }).present();
-      }, error => {
-        console.log('add fail');
-      })
-    }
-  
-  
+    }).then(data => {
+      console.log('add success');
+      this.alertCtrl.create({
+        title: 'Add to your booking list successfully',
+        buttons: [{
+          text: 'OK',
+          handler: data => {
+            this.navCtrl.push(BookingPage);
+          }
+        }]
+      }).present();
+    }, error => {
+      console.log('add fail');
+    })
+  }
 
   // private setNotification(bookingStartTime) {
   //     let prompt = this.alertCtrl.create({
@@ -204,5 +240,5 @@ export class BookingPage {
 }
 
 
-  
+
 

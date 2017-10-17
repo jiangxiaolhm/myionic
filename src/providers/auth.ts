@@ -12,8 +12,11 @@ export class AuthProvider {
     ) { }
 
     /**
+     * Login user with emal and password
      * 
-     * @param user 
+     * @param {User} user 
+     * @returns {Promise<any>} 
+     * @memberof AuthProvider
      */
     login(user: User): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -26,7 +29,10 @@ export class AuthProvider {
     }
 
     /**
+     * Logout
      * 
+     * @returns {Promise<any>} 
+     * @memberof AuthProvider
      */
     logout(): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -39,8 +45,11 @@ export class AuthProvider {
     }
 
     /**
+     * Register new user with email and password.
      * 
-     * @param user 
+     * @param {User} user 
+     * @returns {Promise<any>} 
+     * @memberof AuthProvider
      */
     register(user: User): Promise<any> {
         return new Promise((resolve, reject) => {

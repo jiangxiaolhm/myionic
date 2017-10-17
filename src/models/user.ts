@@ -5,5 +5,5 @@ export interface User {
     name: string;
     email: string;
     password: string;
-    bookings: Booking;
+    bookings: Booking[];
 }

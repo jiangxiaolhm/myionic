@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
-import { AuthProvider } from './../../providers/auth';
+
 import { User } from './../../models/user';
+
+import { AuthProvider } from './../../providers/auth';
 
 @Component({
   selector: 'page-register',
@@ -9,7 +11,7 @@ import { User } from './../../models/user';
 })
 export class RegisterPage {
 
-  user = {} as User;
+  private user = {} as User;
 
   constructor(
     private authProvider: AuthProvider,
@@ -25,9 +27,11 @@ export class RegisterPage {
 
   /**
    * Register new user with name, email and password
-   * @param user 
+   * 
+   * @param {User} user 
+   * @memberof RegisterPage
    */
-  register(user: User) {
+  private register(user: User) {
     const loading = this.loadingCtrl.create({
       content: "Please waiting ..."
     });
@@ -35,7 +39,6 @@ export class RegisterPage {
 
     this.authProvider.register(user).then((data) => {
       loading.dismiss();
-      console.log(data);
       this.navCtrl.popToRoot();
       this.toastCtrl.create({
         message: `You have successfully registed in the system.`,
@@ -43,7 +46,6 @@ export class RegisterPage {
       }).present();
     }, (error) => {
       loading.dismiss();
-      console.log(error);
       this.toastCtrl.create({
         message: `Sorry, your signup is failed`,
         duration: 2000

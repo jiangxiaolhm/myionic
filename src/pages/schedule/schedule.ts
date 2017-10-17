@@ -69,6 +69,7 @@ export class SchedulePage {
       };
       for (let j = day.startTime; j < day.endTime; j += PERIOD_CONFIG) {
         day.periods.push({
+          ownerId: '',
           startTime: j,
           endTime: j + PERIOD_CONFIG,
           available: true,
@@ -296,6 +297,7 @@ export class SchedulePage {
    */
   private addUserBooking(groupName: string, bookingStartTime: number, bookingEndTime: number) {
     this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
+      ownerId: this.authProvider.afAuth.auth.currentUser.uid,
       groupName: groupName,
       roomKey: this.navParams.data.roomKey,
       startTime: bookingStartTime,
@@ -321,6 +323,7 @@ export class SchedulePage {
 
     for (let i = 0; i < day.periods.length; i++) {
       if (day.periods[i].startTime >= bookingStartTime && day.periods[i].endTime <= bookingEndTime) {
+        day.periods[i].ownerId = this.authProvider.afAuth.auth.currentUser.uid;
         day.periods[i].groupName = groupName;
         day.periods[i].available = false;
       }
@@ -333,6 +336,7 @@ export class SchedulePage {
       }
     ).then(() => {
       console.log('update room booking success');
+      this.navCtrl.popToRoot();
       this.navCtrl.push(BookingPage);
     }, error => {
       console.log('update room booking fail');
@@ -341,6 +345,7 @@ export class SchedulePage {
         buttons: [{
           text: 'OK',
           handler: data => {
+            this.navCtrl.pop();
             this.navCtrl.push(SchedulePage);
           }
         }]

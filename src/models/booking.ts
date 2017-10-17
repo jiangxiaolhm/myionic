@@ -1,7 +1,8 @@
 export interface Booking {
     $key: string;
+    ownerId: string;
     groupName: string;
     roomKey: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: number;
+    endTime: number;
 }

@@ -1,3 +1,5 @@
+import { LoadingController } from 'ionic-angular';
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -11,19 +13,90 @@ import { User } from './../models/user';
 
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class DataProvider {
 
-    user: FirebaseObjectObservable<User> = null;
+    user: User = null;
+    rooms: Room[] = [];
     bookings: FirebaseListObservable<Booking[]> = null;
-    // days: FirebaseListObservable<Day[]> = null;
-    // shareBooking: FirebaseListObservable<ShareBooking[]> = null;
+    processing = this.loadingCtrl.create({
+        content: 'Processing ...'
+    });
+    loading = this.loadingCtrl.create({
+        content: 'Loading ...'
+    });
 
     constructor(
         private afDB: AngularFireDatabase,
-        private authProvider: AngularFireAuth
+        private authProvider: AngularFireAuth,
+        private datePipe: DatePipe,
+        private loadingCtrl: LoadingController
     ) { }
+
+
+    /**
+     * Get a user from database.
+     * 
+     * @param {string} uid 
+     * @returns {Promise<User>} 
+     * @memberof DataProvider
+     */
+    async getUser(uid: string): Promise<User> {
+        return await this.object('users/' + uid).map((user: User) => {
+            return user;
+        }).first().toPromise();
+    }
+
+    /**
+     * Get a room list from database.
+     * 
+     * @returns {Promise<Room[]>} 
+     * @memberof DataProvider
+     */
+    getRooms(): Promise<Room[]> {
+        return this.list('/rooms').map((rooms: Room[]) => {
+            return rooms;
+        }).first().toPromise();
+    }
+
+    /**
+     * Get a day object of a room from database.
+     * 
+     * @param {string} roomKey 
+     * @param {string} dayKey 
+     * @returns {Promise<Day>} 
+     * @memberof DataProvider
+     */
+    getDay(roomKey: string, dayKey: string): Promise<Day> {
+        return this.object('/rooms/' + roomKey + '/days/' + dayKey).map((day: Day) => {
+            return day;
+        }).first().toPromise();
+    }
+
+    /**
+     * Update a day object of a room to database.
+     * 
+     * @param {string} roomKey 
+     * @param {string} dayKey 
+     * @param {Day} day 
+     * @memberof DataProvider
+     */
+    setDay(roomKey: string, dayKey: string, day: Day) {
+        this.update('rooms/' + roomKey + '/days/' + dayKey, day);
+    }
+
+    /**
+     * Get day key of room using a time value.
+     * 
+     * @param {number} timeValue 
+     * @returns {string} 
+     * @memberof DataProvider
+     */
+    getDayKey(timeValue: number): string {
+        return this.datePipe.transform(timeValue, "dd_MM_yyyy");
+    }
 
     /**
      * Push new data to the list of firedatabase with given path 
