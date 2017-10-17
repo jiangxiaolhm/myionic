@@ -210,7 +210,7 @@ export class BookingPage {
    * @returns {boolean}
    * @memberof BookingPage
    */
-  private isExpired(startTime: number): boolean {
+  isExpired(startTime: number): boolean {
     return startTime < new Date().getTime();
   }
 
