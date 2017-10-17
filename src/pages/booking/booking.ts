@@ -36,6 +36,7 @@ export class BookingPage {
     private alertCtrl: AlertController,
     private datePipe: DatePipe,
     private clipboard: Clipboard,
+    private localNotifications: LocalNotifications,
     public navCtrl: NavController,
     public navParams: NavParams,
   ) {}
@@ -54,9 +55,9 @@ export class BookingPage {
 
   /**
    * Reset bookings list and search booking
-   * 
+   *
    * @private
-   * @returns {Promise<void>} 
+   * @returns {Promise<void>}
    * @memberof BookingPage
    */
   private loadBookings(): Promise<void> {
@@ -68,9 +69,9 @@ export class BookingPage {
 
   /**
    * Check and delete booking cancelled by the owner.
-   * 
+   *
    * @private
-   * @param {Booking} booking 
+   * @param {Booking} booking
    * @memberof BookingPage
    */
   private async checkSharedBookingStatus(booking: Booking) {
@@ -96,10 +97,10 @@ export class BookingPage {
 
   /**
    * Return if current user is the booking owner.
-   * 
+   *
    * @private
-   * @param {string} ownerId 
-   * @returns {string} 
+   * @param {string} ownerId
+   * @returns {string}
    * @memberof BookingPage
    */
   private getBookingType(ownerId: string): string {
@@ -112,9 +113,9 @@ export class BookingPage {
 
   /**
    * Share booking link with uid and booking key.
-   * 
+   *
    * @private
-   * @param {string} bookingKey 
+   * @param {string} bookingKey
    * @memberof BookingPage
    */
   private share(bookingKey: string) {
@@ -141,9 +142,9 @@ export class BookingPage {
 
   /**
    * Search shared booking using the owner's booking link.
-   * 
+   *
    * @private
-   * @param {string} link 
+   * @param {string} link
    * @memberof BookingPage
    */
   private search(link: string) {
@@ -167,9 +168,9 @@ export class BookingPage {
    * Cancel booking
    * The owner can cancel booking and update availability of room.
    * The shared user can cancel booking from user booking list.
-   * 
+   *
    * @private
-   * @param {Booking} booking 
+   * @param {Booking} booking
    * @memberof BookingPage
    */
   private async cancel(booking: Booking) {
@@ -200,10 +201,10 @@ export class BookingPage {
 
   /**
    * Returen if the booking has started.
-   * 
+   *
    * @private
-   * @param {number} startTime 
-   * @returns {boolean} 
+   * @param {number} startTime
+   * @returns {boolean}
    * @memberof BookingPage
    */
   private isExpired(startTime: number): boolean {
@@ -212,9 +213,9 @@ export class BookingPage {
 
   /**
    * Add searched booking to user booking list.
-   * 
+   *
    * @private
-   * @param {Booking} booking 
+   * @param {Booking} booking
    * @memberof BookingPage
    */
   private add(booking: Booking) {
@@ -223,64 +224,60 @@ export class BookingPage {
     this.utilProvider.toastPresent('Add booking successfully');
   }
 
-  // private setNotification(bookingStartTime) {
-  //     let prompt = this.alertCtrl.create({
-  //               title: 'Remind Me In ',
-  //               inputs: [
-  //                {
-  //                  type: 'radio',
-  //                  label: 'now(should be: 30mins)',
-  //                  value: '0'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '1 hour',
-  //                  value:'3600000'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '2 hours',
-  //                  value:'7200000'
-  //                },
-  //                {
-  //                  type:'radio',
-  //                  label: '1 days',
-  //                  value:'86400000'
-  //                },
-  //              ],
-  //               buttons: [
-  //                 {
-  //                   text:'Cancel',
-  //                   handler: data => {
-  //                     console.log('Cancel clicked');
-  //                   }
-  //                 },
-  //                 {
-  //                   text:'Set',
-  //                   handler: data => {
-  //                     console.log('Set clicked');
-  //                     this.scheduleNotification(bookingStartTime,data);
-  //                   }
-  //                 }
-  //               ]
-  //     });
-  //           prompt.present();
-  // }
+  private setNotification(bookingStartTime) {
+      let prompt = this.alertCtrl.create({
+                title: 'Remind Me In ',
+                inputs: [
+                 {
+                   type: 'radio',
+                   label: 'now(should be: 30mins)',
+                   value: '0'
+                 },
+                 {
+                   type:'radio',
+                   label: '1 hour',
+                   value:'3600000'
+                 },
+                 {
+                   type:'radio',
+                   label: '2 hours',
+                   value:'7200000'
+                 },
+                 {
+                   type:'radio',
+                   label: '1 days',
+                   value:'86400000'
+                 },
+               ],
+                buttons: [
+                  {
+                    text:'Cancel',
+                    handler: data => {
+                      console.log('Cancel clicked');
+                    }
+                  },
+                  {
+                    text:'Set',
+                    handler: data => {
+                      console.log('Set clicked');
+                      this.scheduleNotification(bookingStartTime,data);
+                    }
+                  }
+                ]
+      });
+            prompt.present();
+  }
 
-  // scheduleNotification(time,value) {
-  //   var v = +value;
-  //   this.localNotifications.schedule({
-  //     title: 'Room Booking System',
-  //     text: 'Room booking reminder :: ' + this.datePipe.transform(time , 'short'),
+  scheduleNotification(time,value) {
+    var v = +value;
+    this.localNotifications.schedule({
+      title: 'Room Booking System',
+      text: 'Room booking reminder :: ' + this.datePipe.transform(time , 'short'),
 
-  //     //this is the tester reminder time
-  //     at:  new Date(new Date().getTime() + v)
-  //     //at:  new Date(time + v)
-  //     //This is the correct reminder time
-  //   })
-  // }
+      //this is the tester reminder time
+      at:  new Date(new Date().getTime() + v)
+      //at:  new Date(time + v)
+      //This is the correct reminder time
+    })
+  }
 }
-
-
-
-

@@ -27,6 +27,7 @@ plugins/
 plugins/android.json
 plugins/ios.json
 package-lock.json
+angularfire2
 www/
 $RECYCLE.BIN/
 
