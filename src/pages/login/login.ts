@@ -1,14 +1,12 @@
-import { UtilProvider } from './../../providers/util';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import { User } from './../../models/user';
-
 import { HomePage } from './../home/home';
 import { RegisterPage } from './../register/register';
-
 import { AuthProvider } from './../../providers/auth';
 import { DataProvider } from './../../providers/data';
+import { UtilProvider } from './../../providers/util';
 
 @Component({
   selector: 'page-login',

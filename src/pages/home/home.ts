@@ -1,17 +1,16 @@
-import { UtilProvider } from './../../providers/util';
-import { MyApp } from './../../app/app.component';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, ToastController } from 'ionic-angular';
 import { Subscription } from 'rxjs/subscription';
 
+import { MyApp } from './../../app/app.component';
+import { User } from './../../models/user';
 import { BookingPage } from './../booking/booking';
 import { LoginPage } from './../login/login';
 import { RoomPage } from './../room/room';
-
 import { AuthProvider } from './../../providers/auth';
 import { DataProvider } from './../../providers/data';
+import { UtilProvider } from './../../providers/util';
 
-import { User } from './../../models/user';
 
 @IonicPage()
 @Component({
@@ -29,8 +28,7 @@ export class HomePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public app: App
-  ) {
-  }
+  ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');

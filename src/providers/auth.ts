@@ -1,8 +1,8 @@
-import { NavParams } from 'ionic-angular/index';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { DataProvider } from './data';
+import { NavParams } from 'ionic-angular/index';
 import { User } from './../models/user';
+import { DataProvider } from './data';
 
 @Injectable()
 export class AuthProvider {
