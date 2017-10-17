@@ -1,3 +1,4 @@
+import { UtilProvider } from './../../providers/util';
 import { MyApp } from './../../app/app.component';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, ToastController } from 'ionic-angular';
@@ -24,7 +25,7 @@ export class HomePage {
   constructor(
     private authProvider: AuthProvider,
     private dataProvider: DataProvider,
-    private toastCtrl: ToastController,
+    private utilProvider: UtilProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
     public app: App
@@ -33,18 +34,18 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
-    // Keep checking auth state
-    // Redirect to login page when signout
+
     this.authStateSubscription = this.authProvider.afAuth.authState.subscribe(currentUser => {
       if (currentUser && currentUser.email && currentUser.uid) {
-        // Initilise user object
+        // Keep updating user object
         this.dataProvider.getUser(currentUser.uid).then((user: User) => {
           this.dataProvider.user = user;
         });
-        // Initilise user's bookings list
-        this.dataProvider.bookings = this.dataProvider.list('/users/' + currentUser.uid + '/bookings');
       } else {
-        this.logout();
+        this.authStateSubscription.unsubscribe();
+        this.dataProvider.user = null;
+        this.authProvider.logout();
+        this.navCtrl.setRoot(LoginPage);
       }
     });
   }
@@ -54,17 +55,12 @@ export class HomePage {
    * 
    * @memberof HomePage
    */
-  logout(): void {
-    this.authProvider.logout().then(() => {
-    }, (error) => {
-      console.log(error);
-    });
+  logout() {
     this.authStateSubscription.unsubscribe();
+    this.dataProvider.user = null;
+    this.authProvider.logout();
     this.navCtrl.setRoot(LoginPage);
-    this.toastCtrl.create({
-      message: `You are sign out already`,
-      duration: 2000
-    }).present();
+    this.utilProvider.toastPresent('You have already logged out.')
   }
 
   /**

@@ -43,12 +43,25 @@ export class DataProvider {
      * @returns {Promise<User>} 
      * @memberof DataProvider
      */
-    async getUser(uid: string): Promise<User> {
-        return await this.object('users/' + uid).map((user: User) => {
+    getUser(uid: string): Promise<User> {
+        return this.object('users/' + uid).map((user: User) => {
             return user;
         }).first().toPromise();
     }
 
+    /**
+     * Get a room from database
+     * 
+     * @param {string} roomKey 
+     * @returns {Promise<Room>} 
+     * @memberof DataProvider
+     */
+    getRoom(roomKey: string): Promise<Room> {
+        return this.object('rooms/' + roomKey).map((room: Room) => {
+            return room;
+        }).first().toPromise();
+    }
+    
     /**
      * Get a room list from database.
      * 
@@ -56,7 +69,7 @@ export class DataProvider {
      * @memberof DataProvider
      */
     getRooms(): Promise<Room[]> {
-        return this.list('/rooms').map((rooms: Room[]) => {
+        return this.list('rooms').map((rooms: Room[]) => {
             return rooms;
         }).first().toPromise();
     }
@@ -70,7 +83,7 @@ export class DataProvider {
      * @memberof DataProvider
      */
     getDay(roomKey: string, dayKey: string): Promise<Day> {
-        return this.object('/rooms/' + roomKey + '/days/' + dayKey).map((day: Day) => {
+        return this.object('rooms/' + roomKey + '/days/' + dayKey).map((day: Day) => {
             return day;
         }).first().toPromise();
     }
@@ -88,14 +101,30 @@ export class DataProvider {
     }
 
     /**
-     * Get day key of room using a time value.
+     * Get a booking object of a user from database.
      * 
-     * @param {number} timeValue 
-     * @returns {string} 
+     * @param {string} uid 
+     * @param {string} bookingKey 
+     * @returns {Promise<Booking>} 
      * @memberof DataProvider
      */
-    getDayKey(timeValue: number): string {
-        return this.datePipe.transform(timeValue, "dd_MM_yyyy");
+    getBooking(uid: string, bookingKey: string): Promise<Booking> {
+        return this.object('users/' + uid + '/bookings/' + bookingKey).map((booking: Booking) => {
+            return booking;
+        }).first().toPromise();
+    }
+
+    /**
+     * Get a booking list of a user form database.
+     * 
+     * @param {string} uid 
+     * @returns {Promise<Booking[]>} 
+     * @memberof DataProvider
+     */
+    getBookings(uid: string): Promise<Booking[]> {
+        return this.list('users/' + uid + '/bookings').map((bookings: Booking[]) => {
+            return bookings;
+        }).first().toPromise();
     }
 
     /**

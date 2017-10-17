@@ -1,3 +1,4 @@
+import { UtilProvider } from './../../providers/util';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
@@ -15,8 +16,7 @@ export class RegisterPage {
 
   constructor(
     private authProvider: AuthProvider,
-    private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
+    private utilProvider: UtilProvider,
     public navCtrl: NavController,
     public navParams: NavParams
   ) { }
@@ -31,26 +31,25 @@ export class RegisterPage {
    * @param {User} user 
    * @memberof RegisterPage
    */
-  register(user: User) {
-    const loading = this.loadingCtrl.create({
-      content: "Please waiting ..."
-    });
-    loading.present();
-
-    this.authProvider.register(user).then((data) => {
-      loading.dismiss();
-      this.navCtrl.popToRoot();
-      this.toastCtrl.create({
-        message: `You have successfully registed in the system.`,
-        duration: 2000
-      }).present();
-    }, (error) => {
-      loading.dismiss();
-      this.toastCtrl.create({
-        message: `Sorry, your signup is failed`,
-        duration: 2000
-      }).present();
-    });
-
+  private register() {
+    if (!this.user.name || !this.user.name.trim()) {
+      this.utilProvider.toastPresent('The user name must be a valid string');
+    } else if (!this.user.email) {
+      this.utilProvider.toastPresent('The email address must be a valid string');
+    } else if (!this.user.password) {
+      this.utilProvider.toastPresent('The password must be a valid string');
+    } else {
+      this.utilProvider.loadingPresent('Signing in. Please wait...');
+      this.authProvider.register(this.user).then((data) => {
+        // Register successfully
+        this.utilProvider.loadingDismiss();
+        this.navCtrl.pop();
+        this.utilProvider.toastPresent('Register successfully');
+      }, (error) => {
+        // Register failed
+        this.utilProvider.loadingDismiss();
+        this.utilProvider.toastPresent(error.message);
+      });
+    }
   }
 }

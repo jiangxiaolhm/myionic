@@ -14,6 +14,26 @@ export class AuthProvider {
     ) { }
 
     /**
+     * Get current user's uid.
+     * 
+     * @returns {string}
+     * @memberof AuthProvider
+     */
+    getCurrentUserUid(): string {
+        return this.afAuth.auth.currentUser.uid;
+    }
+
+    /**
+     * Get current user's diaplay name
+     * 
+     * @returns {string} 
+     * @memberof AuthProvider
+     */
+    getCurrentUserName(): string {
+        return this.afAuth.auth.currentUser.displayName;
+    }
+
+    /**
      * Login user with emal and password
      * 
      * @param {User} user 

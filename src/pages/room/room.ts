@@ -1,3 +1,4 @@
+import { DAY_KEY_FORMAT } from './../../app/app.firebase.config';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
@@ -53,16 +54,16 @@ export class RoomPage {
   }
 
   /**
-   * Direct to room's schedule page with room key
+   * Direct to room's schedule page
    * Send index of date to set active slide index.
    * 
    * @private
-   * @param {string} key 
+   * @param {Room} room 
    * @memberof RoomPage
    */
-  private viewSchedule(key: string) {
+  private viewSchedule(room: Room) {
     this.navCtrl.push(SchedulePage, {
-      roomKey: key,
+      room: room,
       slidesIndex: this.filterDateIndex
     });
   }
@@ -129,31 +130,6 @@ export class RoomPage {
     }
   }
 
-  // add test data for debugging
-  // private addRoomData() {
-  //   for (var i = 1; i <= 10; i++) {
-  //     this.dataProvider.push('rooms', {
-  //       name: i + 'b',
-  //       building: 'Building 11',
-  //       location: 'Level 01',
-  //       type: 'Individual Study',
-  //       facilities: [{
-  //         name: 'computer',
-  //         quantity: 1
-  //       }, {
-  //         name: 'whiteboard',
-  //         quantity: 1
-  //       }],
-  //       capacity: 4,
-  //       notes: ''
-  //     }).then((data) => {
-  //       console.log('#' + i + ' success ' + data);
-  //     }, (error) => {
-  //       console.log('#' + i + ' fail ' + error);
-  //     });
-  //   }
-  // }
-
   /**
    * Filter room with properties
    * 
@@ -183,7 +159,7 @@ export class RoomPage {
       this.filterDateIndex = Math.round((date.getTime() - today.getTime()) / (86400000));
       if (this.filterStartTime != '' && this.filterEndTime != '') {
         if (room.days) {
-          let day: Day = room.days[this.datePipe.transform(date, "dd_MM_yyyy")];
+          let day: Day = room.days[this.datePipe.transform(date, DAY_KEY_FORMAT)];
           if (day != undefined) {
             for (let i = 0; i < day.periods.length; i++) {
               if (day.periods[i].startTime >= this.filterStartTimeNumber && day.periods[i].endTime <= this.filterEndTimeNumber) {

@@ -69,7 +69,7 @@
 
   <ion-list>
     <div *ngFor="let room of rooms">
-      <ion-card *ngIf="filter(room)" (click)="viewSchedule(room.$key)">
+      <ion-card *ngIf="filter(room)" (click)="viewSchedule(room)">
         <button ion-item>
           <ion-card-header>
               Room: {{ room.name }}

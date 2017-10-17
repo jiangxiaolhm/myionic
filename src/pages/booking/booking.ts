@@ -1,3 +1,4 @@
+import { DAY_KEY_FORMAT } from './../../app/app.firebase.config';
 import { UtilProvider } from './../../providers/util';
 import { Period } from './../../models/period';
 import { Component } from '@angular/core';
@@ -26,9 +27,9 @@ import 'rxjs/add/operator/toPromise';
 export class BookingPage {
 
 
-  bookings: FirebaseListObservable<Booking[]> = null;
-  // clipboard: Clipboard;
-  searchBooking: FirebaseListObservable<Booking[]> = null;
+  // bookings: FirebaseListObservable<Booking[]> = null;
+  bookings: Booking[] = [];
+  searchBooking: Booking = null;
   location: string = 'null';
 
   constructor(
@@ -43,69 +44,87 @@ export class BookingPage {
     public toastCtrl: ToastController
   ) {
 
+    this.dataProvider.getBookings(this.authProvider.getCurrentUserUid()).then((bookings: Booking[]) => {
+      this.bookings = bookings;
+      console.log(this.bookings);
+    })
+    // if (this.dataProvider.user.bookings) {
+    //   this.bookings = this.dataProvider.user.bookings;
+    // }
   }
 
-  async ionViewDidLoad() {
+  ionViewDidLoad() {
 
-    this.bookings = this.dataProvider.bookings;
+    
+    // this.dataProvider.getUser()
 
-    // Get room location using room key from rooms table
-    await this.dataProvider.list('rooms', {
-      orderByKey: true,
-      equalTo: '-Ksdgn_rXX1nUrovbqUv'
-    }).map((rooms: Room[]) => {
-      this.location = rooms[0].building + ' ' + rooms[0].location + ' ' + rooms[0].name;
-    }).first().toPromise();
+    // this.bookings = this.dataProvider.bookings;
+
+    // // Get room location using room key from rooms table
+    // await this.dataProvider.list('rooms', {
+    //   orderByKey: true,
+    //   equalTo: '-Ksdgn_rXX1nUrovbqUv'
+    // }).map((rooms: Room[]) => {
+    //   this.location = rooms[0].building + ' ' + rooms[0].location + ' ' + rooms[0].name;
+    // }).first().toPromise();
+  }
+
+  getBookingRoomLocation(roomKey: string): string {
+    // have a bug
+    let location: string = '';
+    this.dataProvider.getRoom(roomKey).then((room: Room) => {
+      location = room.building + ' ' + room.location + ' ' + room.name;
+    });
+    return location;
   }
 
 
-  //share link
   share(bookingId) {
-    // push to share booking table
-
     //share link pop up using key of sharebooking table
     this.alertCtrl.create({
       title: 'Copy the link to your friend.',
-      inputs: [
-        {
-          name: 'link',
-          id: 'copyTarget',
-          value: this.authProvider.afAuth.auth.currentUser.uid + '/' + bookingId
-        },
-      ],
+      inputs: [{
+        name: 'link',
+        value: this.authProvider.getCurrentUserUid() + bookingId
+      }],
       buttons: [{
-        text: 'OK',
-        handler: data => {
-        }
+        text: 'OK'
       }, {
         text: 'clipBoard',
         handler: data => {
-          this.clipboard.copy('hello world');
-          // .then(data => {
-          //   console.log('success');
-          //   this.showMsg(this.toastCtrl);
-          // })
-          // this.clipboard = new Clipboard('#copyTarget');
-          // this.clipboard.on('success', () => this.showMsg(this.toastCtrl));
+          this.clipboard.copy(data.link).then((link) => {
+            this.utilProvider.toastPresent('Copied link to clipboard');
+          }, (error) => {
+            this.utilProvider.toastPresent('Cannot copy link to clipboard, please copy again manually.');
+          });
         }
       }]
     }).present();
-
   }
 
+  /**
+   * Search shared booking using the owner's booking link.
+   * 
+   * @param {string} link 
+   * @memberof BookingPage
+   */
+  async search(link: string) {
+    if (link.length != 48) {
+      this.searchBooking = null;
+    } else {
+      let uid: string = link.substr(0, 28);
+      let bookingKey: string = link.substr(28, 20);
 
-  // search share booking from given link
-  search(link) {
-    var split = link.split("/");
-    this.searchBooking = this.dataProvider.list('users/' + split[0] + '/bookings/', {
-      orderByKey: '$key',
-      equalTo: split[1]
-    });
-    console.log(this.searchBooking);
+      await this.dataProvider.getBooking(uid, bookingKey).then((booking: Booking) => {
+        if (booking.ownerId == null) {
+          this.searchBooking = null;
+        } else {
+          this.searchBooking = booking;
+        }
+      });
+    }
   }
 
-
-  // Cancel the booking 
   /**
    * Cancel booking
    * The owner can cancel booking and update availability of room.
@@ -117,12 +136,12 @@ export class BookingPage {
   async cancel(booking: Booking) {
     // If current user is the booking owner.
     if (booking.ownerId == this.authProvider.afAuth.auth.currentUser.uid) {
-      let dayKey: string = this.utilProvider.getTimeToDayKeyFormat(booking.startTime);
+      let dayKey: string = this.datePipe.transform(booking.startTime, DAY_KEY_FORMAT);
       let theDay: Day = null;
       await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
         theDay = day;
       });
-      
+
       theDay.periods.forEach((period: Period) => {
         if (period.startTime >= booking.startTime && period.endTime <= booking.endTime) {
           if (period.ownerId == booking.ownerId) {
@@ -140,20 +159,15 @@ export class BookingPage {
     this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', booking.$key);
   }
 
-  // disable buttons if booking is expired
-  isExpired(endTime) {
-    return endTime < new Date().getTime();
-  }
-
-
-  //show message when copied
-  showMsg(toastCtrl: ToastController) {
-    let toast = toastCtrl.create({
-      message: 'copied to clipboard',
-      duration: 3000,
-      position: 'top'
-    });
-    toast.present();
+  /**
+   * Returen if the booking has started.
+   * 
+   * @param {any} startTime 
+   * @returns {boolean} 
+   * @memberof BookingPage
+   */
+  isExpired(startTime: number): boolean {
+    return startTime < new Date().getTime();
   }
 
   add(groupName, roomKey, startTime, endTime, location) {
