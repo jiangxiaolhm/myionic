@@ -54,6 +54,7 @@
     "angular2-template-loader": "^0.6.2",
     "codecov": "^2.3.0",
     "html-loader": "^0.5.1",
+    "ionic-mocks": "^1.0.3",
     "jasmine": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
     "karma": "^1.7.1",
