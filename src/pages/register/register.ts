@@ -31,7 +31,7 @@ export class RegisterPage {
    * @param {User} user 
    * @memberof RegisterPage
    */
-  private register() {
+  register() {
     if (!this.user.name || !this.user.name.trim()) {
       this.utilProvider.toastPresent('The user name must be a valid string');
     } else if (!this.user.email) {

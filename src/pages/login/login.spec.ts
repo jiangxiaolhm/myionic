@@ -10,7 +10,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from './../../models/user';
 import { Booking } from './../../models/booking';
 import { AuthMock } from '../../../test-config/authMock';
-
+import { UtilProvider } from './../../providers/util';
  
 describe('Login : LoginPage', () =>{
     let comp : LoginPage;
@@ -48,6 +48,7 @@ describe('Login : LoginPage', () =>{
                 NavController, AuthProvider, LoginPage,
                 ToastController, 
                 LoadingController,
+                {provide: UtilProvider, useValue: UtilProvider},
                 {provide: NavParams, useValue: NavParams},
                 {provide: AuthProvider, useValue: AuthMock},
             ]

@@ -48,9 +48,9 @@ export class BookingPage {
       this.bookings = bookings;
       console.log(this.bookings);
     })
-    // if (this.dataProvider.user.bookings) {
-    //   this.bookings = this.dataProvider.user.bookings;
-    // }
+    if (this.dataProvider.user.bookings) {
+      this.bookings = this.dataProvider.user.bookings;
+    }
   }
 
   ionViewDidLoad() {
