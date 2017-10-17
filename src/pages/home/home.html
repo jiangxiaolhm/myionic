@@ -11,19 +11,19 @@
 
   
   <ion-list>
-  <button ion-item (click)="viewRoomPage()">
+  <button class ="viewRoom"ion-item (click)="viewRoomPage()">
     <ion-icon name="search" item-start></ion-icon>
     Find a room.
   </button>
   </ion-list>
 
   <ion-list>
-  <button ion-item full (click)="viewBookingPage()">
+  <button class = "viewBooking" ion-item full (click)="viewBookingPage()">
     <ion-icon name="calendar" item-start></ion-icon>
     View your bookings
   </button>
   </ion-list>
-  <button ion-button full (click)="logout()">Logout</button>
+  <button ion-button full class = "logoutBTN" (click)="logout()">Logout</button>
   
 
 </ion-content>
