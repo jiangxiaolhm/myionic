@@ -6,7 +6,7 @@ import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable }
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-
+import { Clipboard } from '@ionic-native/clipboard';
 import { Booking } from './../../models/booking';
 import { Day } from './../../models/day';
 import { User } from './../../models/user';
@@ -18,7 +18,6 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { Clipboard } from '@ionic-native/clipboard';
 
 @Component({
   selector: 'page-booking',

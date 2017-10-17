@@ -31,7 +31,7 @@ export class RegisterPage {
    * @param {User} user 
    * @memberof RegisterPage
    */
-  private register(user: User) {
+  register(user: User) {
     const loading = this.loadingCtrl.create({
       content: "Please waiting ..."
     });

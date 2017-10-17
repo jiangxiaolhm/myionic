@@ -1,3 +1,4 @@
+import { NavParams } from 'ionic-angular/index';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { DataProvider } from './data';
@@ -8,7 +9,8 @@ export class AuthProvider {
 
     constructor(
         public afAuth: AngularFireAuth,
-        private dataProvider: DataProvider
+        public dataProvider: DataProvider,
+        
     ) { }
 
     /**
