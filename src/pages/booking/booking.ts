@@ -83,11 +83,7 @@ export class BookingPage {
       theDay = day;
     });
     console.log(theDay);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 1c8ee37b8bee250404278accf78c7f9c74b27587
     for (let i = 0; i < theDay.periods.length; i++) {
       if (theDay.periods[i].startTime >= booking.startTime && theDay.periods[i].endTime <= booking.endTime) {
 
