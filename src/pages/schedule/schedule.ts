@@ -61,7 +61,7 @@ export class SchedulePage {
 
     for (let i = 0; i <= 7; i++) {
       let dayKey: string = this.datePipe.transform(startTime, DAY_KEY_FORMAT)
-      if (this.room.days[dayKey]) {
+      if (this.room.days && this.room.days[dayKey]) {
         // initialise using exsiting day record
         this.days.push(this.room.days[dayKey]);
       } else {

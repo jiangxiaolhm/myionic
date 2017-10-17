@@ -79,10 +79,10 @@ describe('Home : HomePage', () =>{
         });
 
         it('It has property NavParams ', () => {
-            expect(comp.app).toBeDefined();
+            expect(comp.navParams).toBeDefined();
         });
 
-        it('click logout it should call logout function', () => {
+        it('should be able to logout', () => {
             spyOn(comp, 'logout');
             logoutBTN.triggerEventHandler('click', null);
             expect(comp.logout).toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe('Home : HomePage', () =>{
             expect(navCtrl.push).toHaveBeenCalledWith(RoomPage);
          });
 
-         it('click viewBooking, it should launch booking page', () => {
+        it('click viewBooking, it should launch booking page', () => {
             let navCtrl = fixture.debugElement.injector.get(NavController);
             spyOn(navCtrl, 'push');
             viewBookingBTN.triggerEventHandler('click', null);

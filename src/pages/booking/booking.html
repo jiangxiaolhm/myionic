@@ -21,7 +21,7 @@
         <h3> Room: {{ searchBooking.location }} </h3>
         <h3> Start time: {{ searchBooking.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ searchBooking.endTime | date:'MMM d, y HH:mm'}} </h3>
-        <button [disabled]="isExpired(searchBooking.startTime)" (click)="add(searchBooking)">Add to your list</button>
+        <button [disabled]="isExpired(searchBooking.startTime)" class="addBTN" (click)="add(searchBooking)">Add to your list</button>
       </ion-card-content>
     </ion-card>
   </ion-list>
@@ -37,9 +37,9 @@
         <h3> Start time: {{ booking.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ booking.endTime | date:'MMM d, y HH:mm'}} </h3>
       </ion-card-content>
-      <button [disabled]="isExpired(booking.startTime)" (click)="share(booking.$key)">Share</button>
-      <button [disabled]="isExpired(booking.startTime)" (click)="setNotification(booking.startTime)">Notification</button>
-      <button (click)="cancel(booking)" class="float-right">Cancel</button>
+      <button [disabled]="isExpired(booking.startTime)" class="shareBTN" (click)="share(booking.$key)">Share</button>
+      <button [disabled]="isExpired(booking.startTime)" class="notifyBTN" (click)="setNotification(booking.startTime)">Notification</button>
+      <button (click)="cancel(booking)" class=" cancelBTNfloat-right">Cancel</button>
     </ion-card>
   </ion-list>
 </ion-content>

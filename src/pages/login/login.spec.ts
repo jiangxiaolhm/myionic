@@ -13,6 +13,7 @@ import { AuthMock } from '../../../test-config/authMock';
 import { UtilProvider } from './../../providers/util';
  
 describe('Login : LoginPage', () =>{
+
     let comp : LoginPage;
     let af: AuthProvider;
     let fixture: ComponentFixture<LoginPage>;
@@ -22,7 +23,8 @@ describe('Login : LoginPage', () =>{
     let usernameField: DebugElement;
     let passwordField: DebugElement;
     let AuthMock : AuthMock;
-    
+
+    //mock user data
     let _user : User = {
         $key: '1XeHDxrlOAP5XRKu8rITXajgU055',
         name:'fake',
@@ -94,14 +96,14 @@ describe('Login : LoginPage', () =>{
             expect(comp.navParams).toBeDefined();
          });
 
-        it('click login, it should call login function', () => {
+        it('should be able to login', () => {
             spyOn(comp, 'login');
             loginBtn.triggerEventHandler('click', null);
             expect(comp.login).toHaveBeenCalled();
         });
 
 
-        it('click register, it should call register function', () => {
+        it('should call register function', () => {
             spyOn(comp, 'register');
             regBtn.triggerEventHandler('click', null);
             expect(comp.register).toHaveBeenCalled();
