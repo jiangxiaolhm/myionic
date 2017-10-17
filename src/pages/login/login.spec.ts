@@ -9,10 +9,11 @@ import { DataProvider } from './../../providers/data';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from './../../models/user';
 import { Booking } from './../../models/booking';
+import { AuthMock } from '../../../test-config/authMock';
 
  
 describe('Login : LoginPage', () =>{
-    let comp: LoginPage;
+    let comp : LoginPage;
     let af: AuthProvider;
     let fixture: ComponentFixture<LoginPage>;
     let de: DebugElement;
@@ -20,28 +21,7 @@ describe('Login : LoginPage', () =>{
     let regBtn: DebugElement;
     let usernameField: DebugElement;
     let passwordField: DebugElement;
-
-    class LoginMock{
-        login(user:User): Promise<any> {
-            return Promise.resolve()
-        };
-    }
-
-    class AuthMock  {
-        login(user: User): Promise<any> {
-            return Promise.resolve()
-        };
-
-        register(user: User): Promise<any> {
-            return Promise.resolve()
-        };
-
-        logout(): Promise<any> {
-            return Promise.resolve()
-        };
-    }
-
-
+    let AuthMock : AuthMock;
     
     let _user : User = {
         $key: '1XeHDxrlOAP5XRKu8rITXajgU055',
@@ -69,14 +49,13 @@ describe('Login : LoginPage', () =>{
                 ToastController, 
                 LoadingController,
                 {provide: NavParams, useValue: NavParams},
-                {provide: AuthProvider, useClass: AuthMock},
+                {provide: AuthProvider, useValue: AuthMock},
             ]
         }).compileComponents();
         
       }));
 
       
-     
 
     describe('login component', () =>{
         beforeEach(() => {
@@ -104,13 +83,23 @@ describe('Login : LoginPage', () =>{
             expect(comp).toBeTruthy();
          });
      
+         
+         it('It has property navCtrl ', () => {
+            expect(comp.navCtrl).toBeDefined();
+         });
+
+        
+         it('It has property navParams ', () => {
+            expect(comp.navParams).toBeDefined();
+         });
+
         it('click login, it should call login function', () => {
             spyOn(comp, 'login');
             loginBtn.triggerEventHandler('click', null);
             expect(comp.login).toHaveBeenCalled();
         });
 
-    
+
         it('click register, it should call register function', () => {
             spyOn(comp, 'register');
             regBtn.triggerEventHandler('click', null);
