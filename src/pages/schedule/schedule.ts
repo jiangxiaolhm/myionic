@@ -1,18 +1,17 @@
-import { UtilProvider } from './../../providers/util';
-import { Room } from './../../models/room';
-import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { NavController, NavParams, AlertController, Slides, LoadingController } from 'ionic-angular';
-
-import { PERIOD_LENGTH, MAX_ADVANCE_BOOKING_DAY, DAY_KEY_FORMAT } from './../../app/app.firebase.config';
-import { Period } from './../../models/period';
-import { Day } from './../../models/day';
-import { DataProvider } from './../../providers/data';
-import { AuthProvider } from './../../providers/auth';
-import { BookingPage } from './../booking/booking';
-
 import { Subscription } from 'rxjs/subscription'
+
+import { PERIOD_LENGTH, MAX_ADVANCE_BOOKING_DAY, DAY_KEY_FORMAT } from './../../app/app.config';
+import { Day } from './../../models/day';
+import { Period } from './../../models/period';
+import { Room } from './../../models/room';
+import { BookingPage } from './../booking/booking';
+import { AuthProvider } from './../../providers/auth';
+import { DataProvider } from './../../providers/data';
+import { UtilProvider } from './../../providers/util';
 
 @Component({
   selector: 'page-schedule',
@@ -290,6 +289,7 @@ export class SchedulePage {
       ownerId: this.authProvider.afAuth.auth.currentUser.uid,
       groupName: groupName,
       roomKey: this.room.$key,
+      location: this.room.building + ' ' + this.room.location + ' ' + this.room.name,
       startTime: bookingStartTime,
       endTime: bookingEndTime
     }).then(data => {

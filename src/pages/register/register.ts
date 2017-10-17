@@ -1,10 +1,9 @@
-import { UtilProvider } from './../../providers/util';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import { User } from './../../models/user';
-
 import { AuthProvider } from './../../providers/auth';
+import { UtilProvider } from './../../providers/util';
 
 @Component({
   selector: 'page-register',

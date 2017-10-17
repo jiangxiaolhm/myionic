@@ -1,40 +1,28 @@
-import { LoadingController } from 'ionic-angular';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take'
+import 'rxjs/add/operator/toPromise';
 
 import { Booking } from './../models/booking';
 import { Day } from './../models/day';
 import { Room } from './../models/room';
 import { User } from './../models/user';
 
-
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-
 @Injectable()
 export class DataProvider {
 
     user: User = null;
     rooms: Room[] = [];
-    bookings: FirebaseListObservable<Booking[]> = null;
-    processing = this.loadingCtrl.create({
-        content: 'Processing ...'
-    });
-    loading = this.loadingCtrl.create({
-        content: 'Loading ...'
-    });
 
     constructor(
         private afDB: AngularFireDatabase,
         private authProvider: AngularFireAuth,
         private datePipe: DatePipe,
-        private loadingCtrl: LoadingController
     ) { }
-
 
     /**
      * Get a user from database.
@@ -96,7 +84,7 @@ export class DataProvider {
      * @param {Day} day 
      * @memberof DataProvider
      */
-    setDay(roomKey: string, dayKey: string, day: Day) {
+    updateDay(roomKey: string, dayKey: string, day: Day) {
         this.update('rooms/' + roomKey + '/days/' + dayKey, day);
     }
 
@@ -112,6 +100,24 @@ export class DataProvider {
         return this.object('users/' + uid + '/bookings/' + bookingKey).map((booking: Booking) => {
             return booking;
         }).first().toPromise();
+    }
+
+    /**
+     * Set a booking object to user booking list in database.
+     * 
+     * @param {string} uid 
+     * @param {Booking} booking 
+     * @memberof DataProvider
+     */
+    setBooking(uid: string, booking: Booking) {
+        this.list('users/' + uid + '/bookings').set(booking.$key, {
+            ownerId: booking.ownerId,
+            groupName: booking.groupName,
+            roomKey: booking.roomKey,
+            location: booking.location,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+        });
     }
 
     /**

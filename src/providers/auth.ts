@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { DataProvider } from './data';
 import { User } from './../models/user';
+import { DataProvider } from './data';
 
 @Injectable()
 export class AuthProvider {

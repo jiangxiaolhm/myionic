@@ -1,14 +1,14 @@
-import { DAY_KEY_FORMAT } from './../../app/app.firebase.config';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2/database';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
+import { DAY_KEY_FORMAT } from './../../app/app.config';
 import { Day } from './../../models/day';
 import { Facility } from './../../models/facility';
 import { Room } from './../../models/room';
-import { DataProvider } from './../../providers/data';
 import { SchedulePage } from './../schedule/schedule';
+import { DataProvider } from './../../providers/data';
 
 @Component({
   selector: 'page-room',

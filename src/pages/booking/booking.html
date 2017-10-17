@@ -18,11 +18,10 @@
         Group : {{ searchBooking.groupName }}
       </ion-card-header>
       <ion-card-content>
-        <h3> Booking ID: {{ searchBooking.$key }} </h3>
-        <!-- <h3> Room: {{ getBookingRoomLocation(searchBooking.roomKey) }} </h3> -->
+        <h3> Room: {{ searchBooking.location }} </h3>
         <h3> Start time: {{ searchBooking.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ searchBooking.endTime | date:'MMM d, y HH:mm'}} </h3>
-        <button [disabled]="isExpired(searchBooking.endTime)" (click)="add(searchBooking)">Add to your list</button>
+        <button [disabled]="isExpired(searchBooking.startTime)" (click)="add(searchBooking)">Add to your list</button>
       </ion-card-content>
     </ion-card>
   </ion-list>
@@ -33,14 +32,14 @@
         Group : {{ booking.groupName }}
       </ion-card-header>
       <ion-card-content>
-        <h3> Booking ID: {{ booking.$key }} </h3>
-        <h3> Room: {{ getBookingRoomLocation(booking.roomKey) }} </h3>
+        <h3> Booking Type: {{ getBookingType(booking.ownerId) }} </h3>
+        <h3> Room: {{ booking.location }} </h3>
         <h3> Start time: {{ booking.startTime | date:'MMM d, y HH:mm' }} </h3>
         <h3> End time: {{ booking.endTime | date:'MMM d, y HH:mm'}} </h3>
       </ion-card-content>
-      <button [disabled]="isExpired(booking.endTime)" (click)="cancel(booking)">Cancel</button>
-      <button [disabled]="isExpired(booking.endTime)" id="clp" (click)="share(booking.$key)">Share</button>
-      <button (click)="setNotification(booking.startTime)" style="float: right;">Notification</button>
+      <button [disabled]="isExpired(booking.startTime)" (click)="share(booking.$key)">Share</button>
+      <button [disabled]="isExpired(booking.startTime)" (click)="setNotification(booking.startTime)">Notification</button>
+      <button (click)="cancel(booking)" class="float-right">Cancel</button>
     </ion-card>
   </ion-list>
 </ion-content>

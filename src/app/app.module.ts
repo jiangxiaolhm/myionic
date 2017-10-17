@@ -1,25 +1,22 @@
-import { Clipboard } from '@ionic-native/clipboard';
-import { BrowserModule } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
-import { StatusBar } from '@ionic-native/status-bar';
+import { BrowserModule } from '@angular/platform-browser';
+import { Clipboard } from '@ionic-native/clipboard';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-import { LoginPage } from './../pages/login/login';
-import { RegisterPage } from './../pages/register/register';
-import { HomePageModule } from './../pages/home/home.module';
-
+import { StatusBar } from '@ionic-native/status-bar';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { FIREBASE_CONFIG } from './app.firebase.config';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
+import { MyApp } from './app.component';
+import { FIREBASE_CONFIG } from './app.config';
+import { HomePageModule } from './../pages/home/home.module';
+import { LoginPage } from './../pages/login/login';
+import { RegisterPage } from './../pages/register/register';
 import { AuthProvider } from './../providers/auth';
 import { DataProvider } from './../providers/data';
 import { UtilProvider } from './../providers/util';
-import { DatePipe } from '@angular/common';
-
 
 @NgModule({
   declarations: [
