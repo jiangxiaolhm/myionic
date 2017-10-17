@@ -25,7 +25,7 @@ export class RoomPage {
   private filterStartTime: any = '';
   private filterEndTime: any = '';
   private filterStartTimeNumber: number = 0;
-  private filterEndTimeNumber: number = 0; s
+  private filterEndTimeNumber: number = 0; 
 
   private rooms: Room[] = null;
 
@@ -49,31 +49,20 @@ export class RoomPage {
       this.dataProvider.rooms = rooms;
       loading.dismiss();
     });
-    
-    
+
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomPage');
-    // let d1 = new Date('2017-10-17T23:00:00.000Z')
-    // let d2 = new Date('2017-10-18T10:00:00.000Z')
-    // d2.setHours(d2.getHours() - 11);
-    // console.log(d1.getTime());
-    // console.log(d2.getTime());
-
-    // let d3 = new Date(Date.UTC(2017, 10, 18, 10, 0, 0));
-    // d3.setUTCHours(d3.getUTCHours() - 10);
-    // let d4 = new Date(Date.UTC(2017, 10, 18, 0, 0, 0));
-    // console.log(d4.toISOString());
-    // console.log(d3.toISOString());
   }
 
   /**
    * Direct to room's schedule page
    * Send index of date to set active slide index.
-   * 
+   *
    * @private
-   * @param {Room} room 
+   * @param {Room} room
    * @memberof RoomPage
    */
   private viewSchedule(room: Room) {
@@ -85,10 +74,10 @@ export class RoomPage {
 
   /**
    * Return facility string for presentation
-   * 
+   *
    * @private
-   * @param {Facility[]} facilities 
-   * @returns {string} 
+   * @param {Facility[]} facilities
+   * @returns {string}
    * @memberof RoomPage
    */
   private facilitiesToString(facilities: Facility[]): string {
@@ -101,9 +90,9 @@ export class RoomPage {
 
   /**
    * Get and transform today to ISO format
-   * 
+   *
    * @private
-   * @returns {string} 
+   * @returns {string}
    * @memberof RoomPage
    */
   private minDate(): string {
@@ -112,9 +101,9 @@ export class RoomPage {
 
   /**
    * Get and transform next 7th day to ISO format
-   * 
+   *
    * @private
-   * @returns {string} 
+   * @returns {string}
    * @memberof RoomPage
    */
   private maxDate(): string {
@@ -126,7 +115,7 @@ export class RoomPage {
   /**
    * Update selected times
    * Transform datetime from ISO format to number of miliseconds.
-   * 
+   *
    * @private
    * @memberof RoomPage
    */
@@ -153,10 +142,10 @@ export class RoomPage {
 
   /**
    * Filter room with properties
-   * 
+   *
    * @private
-   * @param {Room} room 
-   * @returns {boolean} 
+   * @param {Room} room
+   * @returns {boolean}
    * @memberof RoomPage
    */
   private filter(room: Room): boolean {
@@ -182,22 +171,10 @@ export class RoomPage {
         if (room.days) {
           let day: Day = room.days[this.datePipe.transform(date, DAY_KEY_FORMAT)];
           if (day) {
-            // console.log();
-
-
-            // if (room.name == '2a')
-            //   console.log('-------------');
-
             for (let i = 0; i < day.periods.length; i++) {
-              // if (room.name == '2a' && day.periods[i].startTime == 1508281200000) {
-              //   console.log(day.periods[i]);
-              //   console.log(day.periods[i].startTime);
-              //   console.log(this.filterStartTimeNumber);
-              //   console.log(day.periods[i].startTime >= this.filterStartTimeNumber);
-              // }
               if (day.periods[i].startTime >= this.filterStartTimeNumber && day.periods[i].endTime <= this.filterEndTimeNumber) {
                 if (!day.periods[i].available) {
-                  // return false;
+                   return false;
                 }
               }
             }

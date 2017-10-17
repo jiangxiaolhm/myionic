@@ -78,7 +78,7 @@ export class BookingPage {
     let dayKey: string = this.datePipe.transform(booking.startTime, DAY_KEY_FORMAT);
     let theDay: Day = null;
     console.log(theDay);
-    
+
     await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
       theDay = day;
     });
@@ -233,26 +233,26 @@ export class BookingPage {
 
   private setNotification(bookingStartTime) {
     let prompt = this.alertCtrl.create({
-      title: 'Remind Me In ',
+      title: 'Remind Me ',
       inputs: [
         {
           type: 'radio',
-          label: 'now(should be: 30mins)',
+          label: 'now',
           value: '0'
         },
         {
           type: 'radio',
-          label: '1 hour',
+          label: 'In 1 hour',
           value: '3600000'
         },
         {
           type: 'radio',
-          label: '2 hours',
+          label: 'In 2 hours',
           value: '7200000'
         },
         {
           type: 'radio',
-          label: '1 days',
+          label: 'In 1 days',
           value: '86400000'
         },
       ],
@@ -277,14 +277,17 @@ export class BookingPage {
 
   scheduleNotification(time, value) {
     var v = +value;
+    if (v == 0) {
+      this.localNotifications.schedule({
+        title: 'Room Booking System',
+        text: 'Room booking reminder :: ' + this.datePipe.transform(time, 'short'),
+        at: new Date(new Date().getTime() + v)
+      })
+    }else
     this.localNotifications.schedule({
       title: 'Room Booking System',
       text: 'Room booking reminder :: ' + this.datePipe.transform(time, 'short'),
-
-      //this is the tester reminder time
-      at: new Date(new Date().getTime() + v)
-      //at:  new Date(time + v)
-      //This is the correct reminder time
+      at:  new Date(time + v)
     })
   }
 }
