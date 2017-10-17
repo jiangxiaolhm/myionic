@@ -8,6 +8,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { MyApp } from './app.component';
 import { FIREBASE_CONFIG } from './app.config';
@@ -46,7 +47,8 @@ import { UtilProvider } from './../providers/util';
     DataProvider,
     UtilProvider,
     DatePipe,
-    Clipboard
+    Clipboard,
+    LocalNotifications
   ]
 })
 export class AppModule { }
