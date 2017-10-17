@@ -1,3 +1,4 @@
+import { UtilProvider } from './../../providers/util';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
@@ -19,8 +20,7 @@ export class LoginPage {
 
   constructor(
     private authProvier: AuthProvider,
-    private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController,
+    private utilProvider: UtilProvider,
     public navCtrl: NavController,
     public navParams: NavParams
   ) { }
@@ -32,28 +32,26 @@ export class LoginPage {
   /**
    * Login with user email and password
    * 
-   * @param {User} user 
    * @memberof LoginPage
    */
-  login(user: User): void {
-    const loading = this.loadingCtrl.create({
-      content: "Please waiting ..."
-    });
-    loading.present();
-    this.authProvier.login(user).then((data) => {
-      loading.dismiss();
-      this.navCtrl.setRoot(HomePage);
-      this.toastCtrl.create({
-        message: `Welcome to Homepage, ${data.email}`,
-        duration: 2000
-      }).present();
-    }, (error) => {
-      loading.dismiss();
-      this.toastCtrl.create({
-        message: `${error.message}`,
-        showCloseButton: true
-      }).present();
-    });
+  login() {
+    if (!this.user.email) {
+      this.utilProvider.toastPresent('The email address must be a valid string');
+    } else if (!this.user.password) {
+      this.utilProvider.toastPresent('The password must be a valid string');
+    } else {
+      this.utilProvider.loadingPresent('Signing in. Please wait...');
+      this.authProvier.login(this.user).then((data) => {
+        // Login successfully
+        this.utilProvider.loadingDismiss();
+        this.navCtrl.setRoot(HomePage);
+        this.utilProvider.toastPresent('Welcome to Room Booking System, ' + this.authProvier.getCurrentUserName());
+      }, (error) => {
+        // Login failed
+        this.utilProvider.loadingDismiss();
+        this.utilProvider.toastPresent(error.message);
+      });
+    }
   }
 
   /**
@@ -61,7 +59,7 @@ export class LoginPage {
    * 
    * @memberof LoginPage
    */
-  register(): void {
+  register() {
     this.navCtrl.push(RegisterPage);
   }
 

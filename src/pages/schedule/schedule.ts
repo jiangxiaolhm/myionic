@@ -1,9 +1,11 @@
+import { UtilProvider } from './../../providers/util';
+import { Room } from './../../models/room';
 import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 import { Component, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NavController, NavParams, AlertController, Slides, LoadingController } from 'ionic-angular';
 
-import { PERIOD_CONFIG, MAX_ADVANCE_BOOKING_DAY } from './../../app/app.firebase.config';
+import { PERIOD_LENGTH, MAX_ADVANCE_BOOKING_DAY, DAY_KEY_FORMAT } from './../../app/app.firebase.config';
 import { Period } from './../../models/period';
 import { Day } from './../../models/day';
 import { DataProvider } from './../../providers/data';
@@ -22,19 +24,21 @@ export class SchedulePage {
   @ViewChild(Slides)
   private slides: Slides;
   private slidesIndex: number = 0;
+  private room: Room = null;
   private days: Day[] = [];
   private periodA: Period = null;
   private periodB: Period = null;
 
   constructor(
     private datePipe: DatePipe,
-    private dataProvider: DataProvider,
     private authProvider: AuthProvider,
-    private loadingCtrl: LoadingController,
+    private dataProvider: DataProvider,
+    private utilProvider: UtilProvider,
     private alertCtrl: AlertController,
     public navCtrl: NavController,
     public navParams: NavParams
   ) {
+    this.room = this.navParams.data.room;
     this.initialiseDays();
   }
 
@@ -50,55 +54,41 @@ export class SchedulePage {
    * @memberof SchedulePage
    */
   private initialiseDays() {
-    const loading = this.loadingCtrl.create({
-      content: 'Loading ...'
-    });
-    loading.present();
-
+    this.utilProvider.loadingPresent('Loading...');
     let startTime = new Date();
     let endTime = new Date();
     startTime.setHours(8, 0, 0, 0);
     endTime.setHours(20, 0, 0, 0);
 
     for (let i = 0; i <= 7; i++) {
-      let day: Day = {
-        $key: this.datePipe.transform(startTime, 'dd_MM_yyyy'),
-        startTime: startTime.getTime(),
-        endTime: endTime.getTime(),
-        periods: []
-      };
-      for (let j = day.startTime; j < day.endTime; j += PERIOD_CONFIG) {
-        day.periods.push({
-          ownerId: '',
-          startTime: j,
-          endTime: j + PERIOD_CONFIG,
-          available: true,
-          groupName: ''
-        });
+      let dayKey: string = this.datePipe.transform(startTime, DAY_KEY_FORMAT)
+      if (this.room.days[dayKey]) {
+        // initialise using exsiting day record
+        this.days.push(this.room.days[dayKey]);
+      } else {
+        // no booking record, initialise with empty day
+        let day: Day = {
+          $key: dayKey,
+          startTime: startTime.getTime(),
+          endTime: endTime.getTime(),
+          periods: []
+        };
+        for (let j = day.startTime; j < day.endTime; j += PERIOD_LENGTH) {
+          day.periods.push({
+            ownerId: '',
+            startTime: j,
+            endTime: j + PERIOD_LENGTH,
+            available: true,
+            groupName: ''
+          });
+        }
+        this.days.push(day);
       }
-      this.days.push(day);
+
       startTime.setDate(startTime.getDate() + 1);
       endTime.setDate(endTime.getDate() + 1);
     }
-
-    this.bindDays();
-    loading.dismiss();
-  }
-
-  async bindDays() {
-    await this.dataProvider.list('rooms/' + this.navParams.data.roomKey + '/days/', {
-      orderByChild: 'startTime',
-      startAt: this.days[0].startTime,
-      entAt: this.days[this.days.length - 1].startTime,
-      limitToFirst: 8
-    }).map((data: Day[]) => {
-      for (let i = 0, j = 0; i < this.days.length && j < data.length; i++) {
-        if (this.days[i].$key == data[j].$key) {
-          this.days[i] = data[j];
-          j++;
-        }
-      }
-    }).first().toPromise();
+    this.utilProvider.loadingDismiss();
   }
 
   /**
@@ -299,7 +289,7 @@ export class SchedulePage {
     this.dataProvider.push('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', {
       ownerId: this.authProvider.afAuth.auth.currentUser.uid,
       groupName: groupName,
-      roomKey: this.navParams.data.roomKey,
+      roomKey: this.room.$key,
       startTime: bookingStartTime,
       endTime: bookingEndTime
     }).then(data => {
@@ -329,7 +319,7 @@ export class SchedulePage {
       }
     }
     this.dataProvider.update(
-      'rooms/' + this.navParams.data.roomKey + '/days/' + this.datePipe.transform(day.startTime, "dd_MM_yyyy"), {
+      'rooms/' + this.room.$key + '/days/' + this.datePipe.transform(day.startTime, DAY_KEY_FORMAT), {
         startTime: day.startTime,
         endTime: day.endTime,
         periods: day.periods
@@ -350,7 +340,7 @@ export class SchedulePage {
           }
         }]
       }).present();
-      
+
     });
   }
 
