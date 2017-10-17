@@ -35,7 +35,10 @@ describe('Booking : BookingPage', () =>{
     let af: AuthProvider;
     let fixture: ComponentFixture<BookingPage>;
     let AuthMock : AuthMock;
-    let de: DebugElement;
+    let shareBTN: DebugElement;
+    let addBTN: DebugElement;
+    let searchBTN : DebugElement;
+    let cancelBTN: DebugElement;
     let UtilMock : UtilMock;
 
     beforeEach(async(() => {
@@ -60,21 +63,48 @@ describe('Booking : BookingPage', () =>{
         
       }));
 
-      describe('home page component', () =>{
+      describe('booking page component', () =>{
         beforeEach(() => {
             fixture = TestBed.createComponent(BookingPage);
-            comp = fixture.componentInstance;        
- 
+            comp = fixture.componentInstance;         
+            addBTN = fixture.debugElement.query(By.css('.addBTN'));  
+            cancelBTN = fixture.debugElement.query(By.css('.cancelBTN')); 
+            shareBTN = fixture.debugElement.query(By.css('.shareBTN')); 
+            searchBTN = fixture.debugElement.query(By.css('.searchBTN')); 
         });
         
         afterEach(() => {
             fixture.destroy();
+            addBTN = null;
+            cancelBTN = null;
+            shareBTN = null;
+            searchBTN = null;
             comp = null;
           });
 
-          it('should create Booking component', () => {
+        it('should create Booking component', () => {
             expect(comp instanceof BookingPage).toBe(true);
         });
+
+        it('It has property navCtrl ', () => {
+            expect(comp.navCtrl).toBeDefined();
+        });
+
+        it('It has property navParams ', () => {
+            expect(comp.navParams).toBeDefined();
+        });
+
+        
+        it('Should return false when booking is not expired', () => {
+            let expireTime = new Date().getTime();
+            spyOn(comp, 'isExpired');
+            comp.isExpired(expireTime);
+            expect(comp.isExpired).toHaveBeenCalled();
+            expect(comp.isExpired).toBeTruthy();
+        });
+
+
+        
 
     }); 
 });

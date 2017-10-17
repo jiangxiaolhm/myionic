@@ -47,6 +47,7 @@ describe('Register : RegisterPage', () =>{
         navCtrl = NavControllerMock.instance();
       }));
      
+      //mock user data
       let _user : User = {
         $key: '1XeHDxrlOAP5XRKu8rITXajgU055',
         name:'fake',
@@ -97,14 +98,11 @@ describe('Register : RegisterPage', () =>{
             expect(comp.navCtrl).toBeDefined();
          });
      
-        it('click register it should call register function', () => {
+        it('should call register function when click', () => {
             spyOn(comp, 'register');
-            // comp.register();
             registerBTN.triggerEventHandler('click', null);
             expect(comp.register).toHaveBeenCalled();
         });
-
-
     }); 
        
  

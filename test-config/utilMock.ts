@@ -9,12 +9,7 @@ export class UtilMock {
         return "";
     }
 
-    /**
-     * Present a standard toast with message.
-     * 
-     * @param {string} message 
-     * @memberof UtilProvider
-     */
+    
     toastPresent(message: string) {
         
     }
