@@ -46,4 +46,16 @@ export class UtilProvider {
     public loadingDismiss() {
         this.loading.dismiss();
     }
+
+    /**
+     * Offset the date created using local time as UTC time
+     * 
+     * @param {Date} date 
+     * @returns {Date} 
+     * @memberof UtilProvider
+     */
+    public localTimeToUTCTime(date: Date): Date {
+        date.setHours(date.getHours()-11);
+        return date;
+    }
 }

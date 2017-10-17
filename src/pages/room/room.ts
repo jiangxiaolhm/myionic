@@ -1,3 +1,4 @@
+import { UtilProvider } from './../../providers/util';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FirebaseListObservable } from 'angularfire2/database';
@@ -30,6 +31,7 @@ export class RoomPage {
 
   constructor(
     private dataProvider: DataProvider,
+    private utilProvider: UtilProvider,
     private loadingCtrl: LoadingController,
     private datePipe: DatePipe,
     public navCtrl: NavController,
@@ -47,10 +49,23 @@ export class RoomPage {
       this.dataProvider.rooms = rooms;
       loading.dismiss();
     });
+    
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoomPage');
+    // let d1 = new Date('2017-10-17T23:00:00.000Z')
+    // let d2 = new Date('2017-10-18T10:00:00.000Z')
+    // d2.setHours(d2.getHours() - 11);
+    // console.log(d1.getTime());
+    // console.log(d2.getTime());
+
+    // let d3 = new Date(Date.UTC(2017, 10, 18, 10, 0, 0));
+    // d3.setUTCHours(d3.getUTCHours() - 10);
+    // let d4 = new Date(Date.UTC(2017, 10, 18, 0, 0, 0));
+    // console.log(d4.toISOString());
+    // console.log(d3.toISOString());
   }
 
   /**
@@ -117,18 +132,24 @@ export class RoomPage {
    */
   private timeChanged(): void {
     if (this.filterStartTime != '') {
-      this.filterStartTimeNumber = new Date(this.filterDate + 'T' + this.filterStartTime + ':00.000').getTime();
+      this.filterStartTimeNumber = this.utilProvider.localTimeToUTCTime(new Date(this.filterDate + 'T' + this.filterStartTime + ':00.000Z')).getTime();
     } else {
       this.filterStartTime = this.filterEndTime;
       this.filterStartTimeNumber = this.filterEndTimeNumber;
     }
     if (this.filterEndTime != '') {
-      this.filterEndTimeNumber = new Date(this.filterDate + 'T' + this.filterEndTime + ':00.000').getTime();
+      this.filterEndTimeNumber = this.utilProvider.localTimeToUTCTime(new Date(this.filterDate + 'T' + this.filterEndTime + ':00.000Z')).getTime();
     } else {
       this.filterEndTime = this.filterStartTime;
       this.filterEndTimeNumber = this.filterStartTimeNumber;
     }
   }
+
+  // private getUTCDate(date: string, time: string): Date {
+  //   let splitDate = date.split('-');
+  //   let splitTime = time.split(':');
+  //   // return new Date(Date.UTC(splitDate[0], splitDate[1], ))
+  // }
 
   /**
    * Filter room with properties
@@ -153,18 +174,30 @@ export class RoomPage {
     }
     // Filter by date and time
     if (this.filterDate != '') {
-      let date = new Date(this.filterDate + 'T00:00:00.000');
+      let date = this.utilProvider.localTimeToUTCTime(new Date(this.filterDate + 'T00:00:00.000Z'));
       let today = new Date();
       today.setHours(0, 0, 0, 0);
       this.filterDateIndex = Math.round((date.getTime() - today.getTime()) / (86400000));
       if (this.filterStartTime != '' && this.filterEndTime != '') {
         if (room.days) {
           let day: Day = room.days[this.datePipe.transform(date, DAY_KEY_FORMAT)];
-          if (day != undefined) {
+          if (day) {
+            // console.log();
+
+
+            // if (room.name == '2a')
+            //   console.log('-------------');
+
             for (let i = 0; i < day.periods.length; i++) {
+              // if (room.name == '2a' && day.periods[i].startTime == 1508281200000) {
+              //   console.log(day.periods[i]);
+              //   console.log(day.periods[i].startTime);
+              //   console.log(this.filterStartTimeNumber);
+              //   console.log(day.periods[i].startTime >= this.filterStartTimeNumber);
+              // }
               if (day.periods[i].startTime >= this.filterStartTimeNumber && day.periods[i].endTime <= this.filterEndTimeNumber) {
                 if (!day.periods[i].available) {
-                  return false;
+                  // return false;
                 }
               }
             }
