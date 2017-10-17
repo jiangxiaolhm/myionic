@@ -39,7 +39,7 @@ export class BookingPage {
     private localNotifications: LocalNotifications,
     public navCtrl: NavController,
     public navParams: NavParams,
-  ) {}
+  ) { }
 
   async ionViewDidLoad() {
     this.utilProvider.loadingPresent('Loading...');
@@ -77,10 +77,13 @@ export class BookingPage {
   private async checkSharedBookingStatus(booking: Booking) {
     let dayKey: string = this.datePipe.transform(booking.startTime, DAY_KEY_FORMAT);
     let theDay: Day = null;
+    console.log(theDay);
+    
     await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
       theDay = day;
     });
-
+    console.log(theDay);
+    
     for (let i = 0; i < theDay.periods.length; i++) {
       if (theDay.periods[i].startTime >= booking.startTime && theDay.periods[i].endTime <= booking.endTime) {
         if (theDay.periods[i].ownerId != booking.ownerId) {
@@ -225,57 +228,57 @@ export class BookingPage {
   }
 
   private setNotification(bookingStartTime) {
-      let prompt = this.alertCtrl.create({
-                title: 'Remind Me In ',
-                inputs: [
-                 {
-                   type: 'radio',
-                   label: 'now(should be: 30mins)',
-                   value: '0'
-                 },
-                 {
-                   type:'radio',
-                   label: '1 hour',
-                   value:'3600000'
-                 },
-                 {
-                   type:'radio',
-                   label: '2 hours',
-                   value:'7200000'
-                 },
-                 {
-                   type:'radio',
-                   label: '1 days',
-                   value:'86400000'
-                 },
-               ],
-                buttons: [
-                  {
-                    text:'Cancel',
-                    handler: data => {
-                      console.log('Cancel clicked');
-                    }
-                  },
-                  {
-                    text:'Set',
-                    handler: data => {
-                      console.log('Set clicked');
-                      this.scheduleNotification(bookingStartTime,data);
-                    }
-                  }
-                ]
-      });
-            prompt.present();
+    let prompt = this.alertCtrl.create({
+      title: 'Remind Me In ',
+      inputs: [
+        {
+          type: 'radio',
+          label: 'now(should be: 30mins)',
+          value: '0'
+        },
+        {
+          type: 'radio',
+          label: '1 hour',
+          value: '3600000'
+        },
+        {
+          type: 'radio',
+          label: '2 hours',
+          value: '7200000'
+        },
+        {
+          type: 'radio',
+          label: '1 days',
+          value: '86400000'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Set',
+          handler: data => {
+            console.log('Set clicked');
+            this.scheduleNotification(bookingStartTime, data);
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
-  scheduleNotification(time,value) {
+  scheduleNotification(time, value) {
     var v = +value;
     this.localNotifications.schedule({
       title: 'Room Booking System',
-      text: 'Room booking reminder :: ' + this.datePipe.transform(time , 'short'),
+      text: 'Room booking reminder :: ' + this.datePipe.transform(time, 'short'),
 
       //this is the tester reminder time
-      at:  new Date(new Date().getTime() + v)
+      at: new Date(new Date().getTime() + v)
       //at:  new Date(time + v)
       //This is the correct reminder time
     })
