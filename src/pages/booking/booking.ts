@@ -80,10 +80,15 @@ export class BookingPage {
     await this.dataProvider.getDay(booking.roomKey, dayKey).then((day: Day) => {
       theDay = day;
     });
+    console.log(theDay);
 
     for (let i = 0; i < theDay.periods.length; i++) {
       if (theDay.periods[i].startTime >= booking.startTime && theDay.periods[i].endTime <= booking.endTime) {
+
+
         if (theDay.periods[i].ownerId != booking.ownerId) {
+
+
           // This booking was cancelled by the booking owner.
           // Remove booking from user table.
           this.dataProvider.remove('users/' + this.authProvider.afAuth.auth.currentUser.uid + '/bookings/', booking.$key);
